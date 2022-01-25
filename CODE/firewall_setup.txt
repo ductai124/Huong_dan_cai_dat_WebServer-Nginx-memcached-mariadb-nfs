@@ -16,10 +16,10 @@ echo "Thêm dịch vụ nfs3, mountd và rpc-bind"
 firewall-cmd --zone=dichvu --add-service={nfs3,mountd,rpc-bind} --permanent
 
 echo "Thêm source vào zone dichvu cho máy có ip $1"
-firewall-cmd --zone=dichvu --add-source='$1' --permanent
+firewall-cmd --zone=dichvu --add-source="$1" --permanent
 
 echo "Thêm source vào zone dichvu cho máy có ip $2"
-firewall-cmd --zone=dichvu --add-source='$2' --permanent
+firewall-cmd --zone=dichvu --add-source="$2" --permanent
 
 echo "Reload lại tường lửa"
 firewall-cmd --reload

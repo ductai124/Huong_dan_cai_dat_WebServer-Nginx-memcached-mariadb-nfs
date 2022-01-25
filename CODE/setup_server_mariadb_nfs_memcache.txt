@@ -16,4 +16,4 @@ read C
 
 echo "Thiết lập firewall"
 
-bash firewal_setup $B $C
+bash firewall_setup $B $C

@@ -10,7 +10,7 @@ dnf install https://rpms.remirepo.net/enterprise/remi-release-8.rpm -y
 
 echo "Cài đặt mariadb"
 dnf module -y install mariadb:10.3
-echo "Khởi động mariadb
+echo "Khởi động mariadb"
 systemctl enable --now mariadb
 echo "Vui lòng nhập thiết mật khẩu và các thiết lập của mariadb"
 mysql_secure_installation
