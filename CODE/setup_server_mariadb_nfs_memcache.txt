@@ -1,0 +1,19 @@
+
+echo "Nhập dải ip của để phục vụ cài đặt NFS(ví dụ: 192.168.1.0)"
+read A
+bash setup_mariadb
+bash setup_memcache
+
+echo "Dải ip được cấp cho NFS là là : $A"
+
+bash setup_NFS $A
+
+echo "Nhập ip của máy Web server số 1"
+read B
+
+echo "Nhập ip của máy Web server số 1"
+read C
+
+echo "Thiết lập firewall"
+
+bash firewal_setup $B $C
