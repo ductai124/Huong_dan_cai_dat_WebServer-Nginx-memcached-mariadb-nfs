@@ -82,7 +82,7 @@ reboot
 * Ta hãy sử dụng những file sau trên kho code 
 ```php
 #Copy Code của các file code sau hoặc tải các file code sau về và để chúng tại thư mục root
-
+#Xóa đuổi txt đi hoặc vào trong file setup_server_mariadb_nfs_memcache.txt thêm đuôi txt cho các file bash đề phòng không chay được
 setup_NFS.txt
 setup_mariadb.txt
 setup_memcache.txt
@@ -90,4 +90,61 @@ setup_server_mariadb_nfs_memcache.txt
 firewall_setup.txt
 
 # Sau đó ta tiến hành cài đặt
+chmod 755 setup_*
+chmod 755 firewall_setup
+
+bash setup_server_mariadb_nfs_memcache
+#Lưu ý code sẽ không tự động toàn bộ quá trình mà sẽ dừng lại để người dùng nhập 1 số thông tin cần thiết ví dụ như sau
+#Nhập dải để cho sử dụng cho máy chủ NFS
+#Tự thiết lập mật khẩu và 1 số mục trong mariadb
+#Nhập ip để kích hoạt tường lửa mở khóa dịch vụ cho 2 máy web server
+#việc làm này khiến cho chúng ta có thể dễ dàng cài đặt trên các mô hình tương đương nhưng có dải ip khác với mô hình mà đang dự kiến sử dụng
+#Khi quá trình cài đặt đã hoàn thành hãy kiểm tra lại xem có phần nào bị lỗi không
+
+```
+* Tiếp theo sẽ tiến hành cài đặt máy web server
+```php
+#Sử dụng file code 
+setup_web_server.txt
+
+#Phân quyền 
+chmod 755 setup_web_server
+bash setup_web_server
+
+#Nhập ip của máy chủ NFS-Memcached-mariadb và chờ đợi cài đặt
+#sau khi cài đặt thành công ta sẽ kiểm tra các cổng bằng cách cài đặt telnet
+yum install -y telnet
+
+#sau đó kiểm tra các cổng sau
+telnet 192.168.1.23 11211
+
+telnet 192.168.1.23 3306
+
+telnet 192.168.1.23 2049
+
+telnet 192.168.1.23 20048
+
+#Riêng cổng 3306 thì kết nối vào là đóng luôn do chưa thiết lập tài khoản kết nối từ xa vấn đề này ta sẽ quay lại máy chủ chứ mariadb và tạo tài khoản cho phép truy cập từ xa
+
+#Trên máy chủ
+#truy cập vào mysql
+mysql -u root -p
+#Tạo tài khoản mới để truy cập từ xa
+create user 'tai123'@'%' identified by 'tai0837686717';
+
+GRANT ALL PRIVILEGES ON *.* TO 'tai123'@'192.168.1.21' IDENTIFIED BY 'tai0837686717';
+
+GRANT ALL PRIVILEGES ON *.* TO 'tai123'@'192.168.1.22' IDENTIFIED BY 'tai0837686717';
+
+FLUSH PRIVILEGES;
+#Hoặc sử dụng tài khoản root để truy cập từ xa
+
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'192.168.1.21' IDENTIFIED BY 'tai0837686717' WITH GRANT OPTION;
+
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'192.168.1.22' IDENTIFIED BY 'tai0837686717' WITH GRANT OPTION;
+
+FLUSH PRIVILEGES;
+
+#Sau đó quay lại bên web server thì telnet sẽ kết nối bình thường
+
 ```
