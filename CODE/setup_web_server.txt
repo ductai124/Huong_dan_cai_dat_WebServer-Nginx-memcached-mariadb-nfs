@@ -15,6 +15,10 @@ dnf -y install nginx
 echo "Khởi động nginx" 
 systemctl enable --now nginx
 
+echo "Kích hoạt tường lửa cho dịch vụ nginx"
+firewall-cmd --add-service=http
+firewall-cmd --runtime-to-permanent
+
 echo "Cài đặt php"
 dnf install epel-release -y
 dnf install https://rpms.remirepo.net/enterprise/remi-release-8.rpm -y
@@ -23,6 +27,8 @@ echo "Cài đặt php"
 dnf module enable php:remi-7.4 -y
 dnf install php-pecl-memcache php-pecl-memcached -y
 dnf install nginx php php-cli -y
+systemctl restart nginx
+systemctl status php-fpm
 
 echo "Kết nối với máy chủ nfs"
 echo "Cài đặt NFS"
