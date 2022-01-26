@@ -44,5 +44,7 @@ echo -e "}" >> /etc/nginx/nginx.conf
 
 systemctl enable --now nginx
 systemctl status nginx
+
+echo "Thiết lập tường lửa"
 firewall-cmd --add-service=http
 firewall-cmd --runtime-to-permanent
