@@ -1,3 +1,5 @@
+#! /bin/bash
+
 echo "Nhập ip của máy chủ NFS-Memcached-mariadb"
 read A
 
@@ -65,3 +67,5 @@ systemctl enable --now autofs
 
 echo "Kiểm tra"
 grep /usr/share/nginx/html/ /proc/mounts
+
+exit 0

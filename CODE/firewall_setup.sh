@@ -1,3 +1,5 @@
+#! /bin/bash
+
 echo "Tiến hành thiết lập firewall"
 
 echo "Tạo zone mới mang tên dichvu"
@@ -29,3 +31,5 @@ firewall-cmd --list-all-zones
 
 
 echo "Hoàn tất thiết lập Firewall"
+
+exit 0

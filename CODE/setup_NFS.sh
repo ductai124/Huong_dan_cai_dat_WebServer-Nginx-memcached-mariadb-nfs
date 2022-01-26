@@ -1,3 +1,5 @@
+#! /bin/bash
+
 echo "Update và upgrade và cài Wget, unzip, tar, epel, remi"
 echo ""
 dnf upgrade --refresh -y
@@ -23,3 +25,6 @@ echo "Khởi động NFS"
 systemctl enable --now rpcbind nfs-server
 
 echo "Hoàn tất cài đặt NFS server"
+
+
+exit 0

@@ -1,3 +1,5 @@
+#! /bin/bash
+
 echo "Update và upgrade và cài Wget, unzip, tar, epel, remi"
 dnf upgrade --refresh -y
 dnf update -y
@@ -24,3 +26,5 @@ echo "Kiểm tra memcached"
 systemctl status memcached
 
 echo "Hoàn thành cài đặt memcached"
+
+exit 0

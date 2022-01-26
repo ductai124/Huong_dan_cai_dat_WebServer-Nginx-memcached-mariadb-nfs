@@ -1,3 +1,4 @@
+#! /bin/bash
 
 echo "Nhập ip của máy Web server số 1"
 read A
@@ -48,3 +49,5 @@ systemctl status nginx
 echo "Thiết lập tường lửa"
 firewall-cmd --add-service=http
 firewall-cmd --runtime-to-permanent
+
+exit 0
