@@ -1,4 +1,8 @@
 #! /bin/bash
+if systemctl is-active --quiet memcached; then
+    echo "Memcached Đã được cài đặt, Không đạt yêu cầu..."
+    exit
+fi
 
 echo "Update và upgrade và cài Wget, unzip, tar, epel, remi"
 dnf upgrade --refresh -y

@@ -1,5 +1,10 @@
 #! /bin/bash
 
+if systemctl is-active --quiet nfs-*; then
+    echo "NFS Đã được cài đặt, Không đạt yêu cầu..."
+    exit
+fi
+
 echo "Update và upgrade và cài Wget, unzip, tar, epel, remi"
 echo ""
 dnf upgrade --refresh -y

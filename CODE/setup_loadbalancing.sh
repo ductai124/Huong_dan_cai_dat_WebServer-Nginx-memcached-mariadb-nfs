@@ -1,5 +1,12 @@
 #! /bin/bash
 
+
+if systemctl is-active --quiet nginx; then
+    echo "Nginx Đã được cài đặt, Không đạt yêu cầu..."
+    exit
+fi
+
+
 echo "Nhập ip của máy Web server số 1"
 read A
 

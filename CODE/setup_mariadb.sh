@@ -1,4 +1,12 @@
 #! /bin/bash
+if systemctl is-active --quiet mariadb; then
+    echo "Mysql Đã được cài đặt, Không đạt yêu cầu..."
+    exit
+fi
+if systemctl is-active --quiet mysql; then
+    echo "Mysql Đã được cài đặt, Không đạt yêu cầu..."
+    exit
+fi
 echo "Update và upgrade và cài Wget, unzip, tar, epel, remi"
 dnf upgrade --refresh -y
 dnf update -y
