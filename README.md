@@ -65,10 +65,10 @@ vi /etc/nginx/nginx.conf
 
 [2. Tiến hành cài đặt](https://github.com/ductai124/Baitap_tonghop#2ti%E1%BA%BFn-h%C3%A0nh-c%C3%A0i-%C4%91%E1%BA%B7t)
 
-[3. Xử lý trong trường hợp phát sinh thêm server web]()
+[3. Trường hợp các máy chủ memcached, mariadb, nfs cài đặt riêng lẻ]()
 
 ***
-## 1.	Giới thiệu mô hình
+# 1.	Giới thiệu mô hình
 * Do giới hạn về mặt tài nguyên nên mô hình sẽ gồm:
     * Load balancing 192.168.1.20
 
@@ -82,7 +82,7 @@ vi /etc/nginx/nginx.conf
         * NFS server
 
         * Memcached server
-## 2.	Tiến hành cài đặt
+# 2.	Tiến hành cài đặt
 * Đầu tiên sẽ tiến hành cài đặt 4 con máy ảo với ip tương tự như trên
 * Việc đầu tiên ở tất cả các máy chúng ta sẽ tiến hành tắt SELINUX và reboot lại hệ thống
 ```php
@@ -90,7 +90,7 @@ sed -i 's/\(^SELINUX=\).*/\SELINUX=disabled/' /etc/sysconfig/selinux
 sed -i 's/\(^SELINUX=\).*/\SELINUX=disabled/' /etc/selinux/config
 reboot
 ```
-* Sau đó ta sẽ tiến hành cài đặt bắt đầu từ máy 192.168.1.23 đầu tiên
+## ***Sau đó ta sẽ tiến hành cài đặt bắt đầu từ máy 192.168.1.23 đầu tiên***
 * Ta hãy sử dụng những file sau trên kho code 
 ```php
 #Copy Code của các file code sau hoặc tải các file code sau về và để chúng tại thư mục root
@@ -98,24 +98,30 @@ reboot
 setup_NFS.sh
 setup_mariadb.sh
 setup_memcache.sh
-setup_server_mariadb_nfs_memcache.sh
+setup_server_all.sh
 firewall_setup.sh
+
+#Truy cập vào file setup_server_all.sh tại dòng 23 24 25 lần lượt nhập dải ip, ip web server 1 và ip web server 2
+#Ví dụ như mô hình đang sử dụng là sẽ điền như sau
+vi setup_server_all.sh
+
+A="192.168.1.0"
+B="192.168.1.21"
+C="192.168.1.22"
 
 # Sau đó ta tiến hành cài đặt
 chmod 755 setup_*
 chmod 755 firewall_setup.sh
 
-bash setup_server_mariadb_nfs_memcache.sh
+bash setup_server_all.sh
 
-#Lưu ý code sẽ không tự động toàn bộ quá trình mà sẽ dừng lại để người dùng nhập 1 số thông tin cần thiết ví dụ như sau
-#Nhập dải để cho sử dụng cho máy chủ NFS
+
 #Tự thiết lập mật khẩu và 1 số mục trong mariadb
-#Nhập ip để kích hoạt tường lửa mở khóa dịch vụ cho 2 máy web server
-#Việc làm này khiến cho chúng ta có thể dễ dàng cài đặt trên các mô hình tương đương nhưng có dải ip khác với mô hình mà đang dự kiến sử dụng
-#Khi quá trình cài đặt đã hoàn thành hãy kiểm tra lại xem có phần nào bị lỗi không
+
+
 
 ```
-* Tiếp theo sẽ tiến hành cài đặt máy web server
+## ***Tiếp theo sẽ tiến hành cài đặt máy web server***
 ```php
 #Sử dụng file code 
 setup_web_server.sh
@@ -161,7 +167,7 @@ FLUSH PRIVILEGES;
 #Sau đó quay lại bên web server thì telnet sẽ kết nối bình thường
 
 ```
-* Cuối cùng là thiết lập cân bằng tải tại máy 192.168.1.20
+## ***Cuối cùng là thiết lập cân bằng tải tại máy 192.168.1.20***
 ```php
 #Sử dụng file code 
 setup_loadbalancing.sh
@@ -175,6 +181,47 @@ bash setup_loadbalancing.sh
 #Nhập ip của web server số 1 và web server số 2 sau đó chờ đợi
 ```
 
-* Trường hợp muốn tách thêm 1 máy chủ web nữa ta sẽ xử lý như sau
+# 3.	Trường hợp các máy chủ memcached, mariadb, nfs cài đặt riêng lẻ
+## ***Cài đặt mariadb***
 ```php
+#Cài đặt mariadb bằng 2 file
+setup_server_mariadb.sh
+setup_mariadb.sh
+#Truy cập vào file setup_server_mariadb.sh tìm đến dòng sau và thay lần lượt ip web server 1 và ip web server 2
+#Ví dụ như mô hình đang sử dụng là sẽ điền như sau
+
+vi setup_server_mariadb.sh
+
+B="192.168.1.21"
+C="192.168.1.22"
+```
+## ***Cài đặt memcached server***
+```php
+#Cài đặt memcached bằng 2 file
+setup_server_memcache.sh
+setup_memcache.sh
+#Truy cập vào file setup_server_memcache.sh tìm đến dòng sau và thay lần lượt ip web server 1 và ip web server 2
+#Ví dụ như mô hình đang sử dụng là sẽ điền như sau
+
+vi setup_server_memcache.sh
+
+B="192.168.1.21"
+C="192.168.1.22"
+
+
+```
+## ***Cài đặt nfs server***
+```php
+#Cài đặt nfs bằng 2 file
+setup_server_nfs.sh
+setup_NFS.sh
+#Truy cập vào file setup_server_nfs.sh tìm đến dòng lần lượt nhập dải ip, ip web server 1 và ip web server 2 theo hướng dẫn có ghi trong file
+#Ví dụ như mô hình đang sử dụng là sẽ điền như sau
+
+vi setup_server_nfs.sh
+
+A="192.168.1.0"
+B="192.168.1.21"
+C="192.168.1.22"
+
 ```
