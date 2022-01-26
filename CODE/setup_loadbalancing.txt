@@ -43,3 +43,6 @@ echo -e "}" >> /etc/nginx/nginx.conf
 
 
 systemctl enable --now nginx
+systemctl status nginx
+firewall-cmd --add-service=http
+firewall-cmd --runtime-to-permanent
