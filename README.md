@@ -53,8 +53,20 @@ vi /etc/nginx/nginx.conf
  }
  
 -->
-***
+
 # TÀI LIỆU HƯỚNG DẪN CÀI ĐĂT 1 MÔ HÌNH HỆ THỐNG CƠ BẢN 
+## Người viết : Phạm Đức Tài
+## SDT : 0837686717
+## Mail : phamductai12345678
+
+***
+# Mục lục
+[1. Giới thiệu mô hình](https://github.com/ductai124/Baitap_tonghop#1gi%E1%BB%9Bi-thi%E1%BB%87u-m%C3%B4-h%C3%ACnh)
+
+[2. Tiến hành cài đặt](https://github.com/ductai124/Baitap_tonghop#2ti%E1%BA%BFn-h%C3%A0nh-c%C3%A0i-%C4%91%E1%BA%B7t)
+
+[3. Xử lý trong trường hợp phát sinh thêm server web]()
+
 ***
 ## 1.	Giới thiệu mô hình
 * Do giới hạn về mặt tài nguyên nên mô hình sẽ gồm:
