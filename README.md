@@ -81,7 +81,7 @@ vi /etc/nginx/nginx.conf
 
         * NFS server
 
-        * memcached server
+        * Memcached server
 ## 2.	Tiến hành cài đặt
 * Đầu tiên sẽ tiến hành cài đặt 4 con máy ảo với ip tương tự như trên
 * Việc đầu tiên ở tất cả các máy chúng ta sẽ tiến hành tắt SELINUX và reboot lại hệ thống
@@ -95,33 +95,34 @@ reboot
 ```php
 #Copy Code của các file code sau hoặc tải các file code sau về và để chúng tại thư mục root
 #Xóa đuổi txt đi hoặc vào trong file setup_server_mariadb_nfs_memcache.txt thêm đuôi txt cho các file bash đề phòng không chay được
-setup_NFS.txt
-setup_mariadb.txt
-setup_memcache.txt
-setup_server_mariadb_nfs_memcache.txt
-firewall_setup.txt
+setup_NFS.sh
+setup_mariadb.sh
+setup_memcache.sh
+setup_server_mariadb_nfs_memcache.sh
+firewall_setup.sh
 
 # Sau đó ta tiến hành cài đặt
 chmod 755 setup_*
-chmod 755 firewall_setup
+chmod 755 firewall_setup.sh
 
-bash setup_server_mariadb_nfs_memcache
+bash setup_server_mariadb_nfs_memcache.sh
+
 #Lưu ý code sẽ không tự động toàn bộ quá trình mà sẽ dừng lại để người dùng nhập 1 số thông tin cần thiết ví dụ như sau
 #Nhập dải để cho sử dụng cho máy chủ NFS
 #Tự thiết lập mật khẩu và 1 số mục trong mariadb
 #Nhập ip để kích hoạt tường lửa mở khóa dịch vụ cho 2 máy web server
-#việc làm này khiến cho chúng ta có thể dễ dàng cài đặt trên các mô hình tương đương nhưng có dải ip khác với mô hình mà đang dự kiến sử dụng
+#Việc làm này khiến cho chúng ta có thể dễ dàng cài đặt trên các mô hình tương đương nhưng có dải ip khác với mô hình mà đang dự kiến sử dụng
 #Khi quá trình cài đặt đã hoàn thành hãy kiểm tra lại xem có phần nào bị lỗi không
 
 ```
 * Tiếp theo sẽ tiến hành cài đặt máy web server
 ```php
 #Sử dụng file code 
-setup_web_server.txt
+setup_web_server.sh
 
 #Phân quyền 
-chmod 755 setup_web_server
-bash setup_web_server
+chmod 755 setup_web_server.sh
+bash setup_web_server.sh
 
 #Nhập ip của máy chủ NFS-Memcached-mariadb và chờ đợi cài đặt
 #sau khi cài đặt thành công ta sẽ kiểm tra các cổng bằng cách cài đặt telnet
@@ -163,13 +164,13 @@ FLUSH PRIVILEGES;
 * Cuối cùng là thiết lập cân bằng tải tại máy 192.168.1.20
 ```php
 #Sử dụng file code 
-setup_loadbalancing.txt
+setup_loadbalancing.sh
 
 #Phân quyền cho file
-chmod 755 setup_loadbalancing
+chmod 755 setup_loadbalancing.sh
 
 #Chạy tools cài đặt
-bash setup_loadbalancing
+bash setup_loadbalancing.sh
 
 #Nhập ip của web server số 1 và web server số 2 sau đó chờ đợi
 ```
