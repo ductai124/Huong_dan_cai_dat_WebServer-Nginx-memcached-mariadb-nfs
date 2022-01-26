@@ -148,3 +148,20 @@ FLUSH PRIVILEGES;
 #Sau đó quay lại bên web server thì telnet sẽ kết nối bình thường
 
 ```
+* Cuối cùng là thiết lập cân bằng tải tại máy 192.168.1.20
+```php
+#Sử dụng file code 
+setup_loadbalancing.txt
+
+#Phân quyền cho file
+chmod 755 setup_loadbalancing
+
+#Chạy tools cài đặt
+bash setup_loadbalancing
+
+#Nhập ip của web server số 1 và web server số 2 sau đó chờ đợi
+```
+
+* Trường hợp muốn tách thêm 1 máy chủ web nữa ta sẽ xử lý như sau
+```php
+```
