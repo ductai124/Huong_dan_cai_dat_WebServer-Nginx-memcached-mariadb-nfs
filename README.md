@@ -57,7 +57,7 @@ vi /etc/nginx/nginx.conf
 # TÀI LIỆU HƯỚNG DẪN CÀI ĐĂT 1 MÔ HÌNH HỆ THỐNG CƠ BẢN 
 ## Người viết : Phạm Đức Tài
 ## SDT : 0837686717
-## Mail : phamductai12345678
+## Mail : phamductai123456@gmail.com
 
 ***
 # Mục lục
@@ -105,7 +105,7 @@ reboot
 
 cd Baitap_tonghop-main/CODE/
 
-#Sau đó ta ls để xem các file trong thu mực gồm những file gì:
+#Sau đó ta ls để xem các file trong thu mực gồm những file gì
 ls
 
 #Truy cập vào file setup_server_all.sh tại ngay những dòng đầu tiên lần lượt nhập dải ip, ip web server 1 và ip web server 2 tương ứng ở trên
@@ -119,6 +119,7 @@ ip_web_server_1="192.168.1.21"
 ip_web_server_2="192.168.1.22"
 
 # Sau đó ta tiến hành cài đặt
+#Trong quá trình cài đặt sẽ có bước phải tự thiết lập mật khẩu và 1 số mục trong mariadb hãy để ý
 
 #Phân quyền
 chmod 755 setup_*
@@ -127,12 +128,10 @@ chmod 755 setup_*
 bash setup_mariadb_memcached_nfs.sh
 
 
-#Tự thiết lập mật khẩu và 1 số mục trong mariadb
-
 #Trên máy chủ
 #Truy cập vào mysql
 mysql -u root -p
-#Tạo tài khoản mới để truy cập từ xa
+#Tạo tài khoản mới để truy cập từ xa (ip ở đây là ip của máy web server)
 create user 'tai123'@'%' identified by 'tai0837686717';
 
 GRANT ALL PRIVILEGES ON *.* TO 'tai123'@'192.168.1.21' IDENTIFIED BY 'tai0837686717';
@@ -140,7 +139,7 @@ GRANT ALL PRIVILEGES ON *.* TO 'tai123'@'192.168.1.21' IDENTIFIED BY 'tai0837686
 GRANT ALL PRIVILEGES ON *.* TO 'tai123'@'192.168.1.22' IDENTIFIED BY 'tai0837686717';
 
 FLUSH PRIVILEGES;
-#Hoặc sử dụng tài khoản root để truy cập từ xa
+#Hoặc sử dụng tài khoản root để truy cập từ xa (ip ở đây là ip của máy web server)
 
 GRANT ALL PRIVILEGES ON *.* TO 'root'@'192.168.1.21' IDENTIFIED BY 'tai0837686717' WITH GRANT OPTION;
 
@@ -159,21 +158,14 @@ FLUSH PRIVILEGES;
 cd Baitap_tonghop-main/CODE/
 
 #Truy cập vào file setup_server_all.sh tại ngay những dòng đầu tiên lần lượt nhập dải ip, ip web server 1 và ip web server 2 tương ứng ở trên
-
 #Web server có thể cài đặt cùng lúc và 2 web server cài đặt giống nhau nên sẽ sử dụng chung hướng dẫn này
-
 #Trước khi cài đặt chúng ta có thể kiểm tra các cổng đã được thông từ bên phí máy server chưa
-
 #Sau đó kiểm tra các cổng sau(ví dụ kiểm tra các cổng trên máy server có IP 192.168.1.23)
 
 telnet 192.168.1.23 11211
 telnet 192.168.1.23 3306
 telnet 192.168.1.23 2049
 telnet 192.168.1.23 20048
-
-#Sử dụng file code 
-
-setup_web_server.sh
 
 #Truy cập vào file setup_web_server.sh nhập ip của máy chủ NFS-Memcached-mariadb vào ngay những dòng đầu và chờ đợi cài đặt(đã có hướng dẫn và ví dụ trong file)
 
@@ -199,11 +191,6 @@ bash setup_web_server.sh
 cd Baitap_tonghop-main/CODE/
 
 #Truy cập vào file setup_server_all.sh tại ngay những dòng đầu tiên lần lượt nhập dải ip, ip web server 1 và ip web server 2 tương ứng ở trên
-
-#Sử dụng file code 
-
-setup_loadbalancing.sh
-
 #Truy cập vào file setup_loadbalancing.sh tại những dòng đầu nhập ip của web server số 1  và web server số 2 tương ứng ở trên (đã có hướng dẫn trong file)
 
 vi setup_loadbalancing.sh
@@ -219,7 +206,6 @@ chmod 755 setup_*
 
 bash setup_loadbalancing.sh
 
-
 ```
 
 # 3.	Trường hợp các máy chủ memcached, mariadb, nfs cài đặt riêng lẻ
@@ -233,7 +219,7 @@ bash setup_loadbalancing.sh
 
 cd Baitap_tonghop-main/CODE/
 ```
-## ***Cài đặt mariadb***
+## ***Đối với máy cần cài đặt mariadb***
 ```php
 #Truy cập vào file setup_server_mariadb.sh tìm đến dòng sau và thay lần lượt ip web server 1 và ip web server 2 (đã có hướng dẫn trong file)
 
@@ -249,7 +235,7 @@ ip_web_server_2="192.168.1.22"
 chmod 755 setup_*
 bash setup_server_mariadb.sh
 ```
-## ***Cài đặt memcached server***
+## ***Đối với máy cần cài đặt memcached server***
 ```php
 #Truy cập vào file setup_server_memcache.sh tìm đến dòng sau và thay lần lượt ip web server 1 và ip web server 2 tương ứng ở trên (đã có hướng dẫn trong file)
 
@@ -266,7 +252,7 @@ chmod 755 setup_*
 bash setup_server_memcache.sh
 
 ```
-## ***Cài đặt nfs server***
+## ***Đối với máy cần cài đặt nfs server***
 ```php
 #Truy cập vào file setup_server_nfs.sh tìm đến dòng lần lượt nhập dải ip, ip web server 1 và ip web server 2 theo hướng dẫn có ghi trong file
 
