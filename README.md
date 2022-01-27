@@ -120,7 +120,10 @@ ip_web_server_2="192.168.1.22"
 
 # Sau đó ta tiến hành cài đặt
 
+#Phân quyền
 chmod 755 setup_*
+
+#Chạy tools cài đặt
 bash setup_mariadb_memcached_nfs.sh
 
 
@@ -179,7 +182,9 @@ ip_server_nfs="192.168.1.23"
 
 #Phân quyền 
 
-chmod 755 setup_web_server.sh
+chmod 755 setup_*
+
+#Chạy tools cài đặt
 bash setup_web_server.sh
 
 ```
@@ -208,7 +213,7 @@ ip_web_server_2="192.168.1.22"
 
 #Phân quyền cho file
 
-chmod 755 setup_loadbalancing.sh
+chmod 755 setup_*
 
 #Chạy tools cài đặt
 
@@ -230,11 +235,6 @@ cd Baitap_tonghop-main/CODE/
 ```
 ## ***Cài đặt mariadb***
 ```php
-#Cài đặt mariadb bằng 2 file sau:
-
-setup_server_mariadb.sh
-setup_mariadb.sh
-
 #Truy cập vào file setup_server_mariadb.sh tìm đến dòng sau và thay lần lượt ip web server 1 và ip web server 2 (đã có hướng dẫn trong file)
 
 #Ví dụ như mô hình đang sử dụng là sẽ điền như sau
@@ -246,16 +246,11 @@ ip_web_server_2="192.168.1.22"
 
 #Phân quyền và cài đặt
 
-chmod 755 setup_server_mariadb.sh
+chmod 755 setup_*
 bash setup_server_mariadb.sh
 ```
 ## ***Cài đặt memcached server***
 ```php
-#Cài đặt memcached bằng 2 file sau:
-
-setup_server_memcache.sh
-setup_memcache.sh
-
 #Truy cập vào file setup_server_memcache.sh tìm đến dòng sau và thay lần lượt ip web server 1 và ip web server 2 tương ứng ở trên (đã có hướng dẫn trong file)
 
 #Ví dụ như mô hình đang sử dụng là sẽ điền như sau
@@ -267,17 +262,12 @@ ip_web_server_2="192.168.1.22"
 
 #Phân quyền và cài đặt
 
-chmod 755 setup_server_memcache.sh
+chmod 755 setup_*
 bash setup_server_memcache.sh
 
 ```
 ## ***Cài đặt nfs server***
 ```php
-#Cài đặt nfs bằng 2 file sau:
-
-setup_server_nfs.sh
-setup_NFS.sh
-
 #Truy cập vào file setup_server_nfs.sh tìm đến dòng lần lượt nhập dải ip, ip web server 1 và ip web server 2 theo hướng dẫn có ghi trong file
 
 #Ví dụ như mô hình đang sử dụng là sẽ điền như sau
@@ -290,7 +280,7 @@ ip_web_server_2="192.168.1.22"
 
 #Phân quyền và cài đặt
 
-chmod 755 setup_server_nfs.sh
+chmod 755 setup_*
 bash setup_server_nfs.sh
 
 ```
