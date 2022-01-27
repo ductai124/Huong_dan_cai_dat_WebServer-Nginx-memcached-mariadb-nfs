@@ -7,15 +7,22 @@ if systemctl is-active --quiet mysql; then
     echo "Mysql Đã được cài đặt, Không đạt yêu cầu..."
     exit
 fi
-echo "Máy chủ đạt yêu cầu để cài đặt dịch vụ mariadb"
-#Vui lòng nhập địa chỉ ip của 2 máy web server vào dòng phía bên dưới Ví dụ B="192.168.1.1"
-#B và C là địa chỉ ip của 2 máy web server
-B="192.168.1.21"
-C="192.168.1.22"
-#Vui lòng nhập địa chỉ ip của 2 máy web server vào dòng phía bên dưới Ví dụ B = "192.168.1.1
 
-echo "Ip máy web server số 1 là $B"
-echo "Ip máy web server số 2 là $C"
+echo "Update và upgrade và cài Wget, unzip, tar, epel, remi"
+dnf upgrade --refresh -y
+dnf update -y
+yum -y install wget unzip tar
+dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm -y
+dnf install https://rpms.remirepo.net/enterprise/remi-release-8.rpm -y
+
+echo "Máy chủ đạt yêu cầu để cài đặt dịch vụ mariadb"
+#Vui lòng nhập địa chỉ ip của 2 máy web server vào dòng phía bên dưới Ví dụ ip_web_server_1="192.168.1.21"
+
+ip_web_server_1="192.168.1.21"
+ip_web_server_2="192.168.1.22"
+
+echo "Ip máy web server số 1 là $ip_web_server_1"
+echo "Ip máy web server số 2 là $ip_web_server_2"
 
 echo "Hãy chắc chắn rằng các địa chỉ ip trên của bạn là đúng"
 
@@ -31,11 +38,11 @@ firewall-cmd --permanent --new-zone=dichvu
 echo "Thêm dịch vụ mysql"
 firewall-cmd --zone=dichvu --add-service=mysql --permanent 
 
-echo "Thêm source vào zone dichvu cho máy có ip $B"
-firewall-cmd --zone=dichvu --add-source="$B" --permanent
+echo "Thêm source vào zone dichvu cho máy có ip $ip_web_server_1"
+firewall-cmd --zone=dichvu --add-source="$ip_web_server_1" --permanent
 
-echo "Thêm source vào zone dichvu cho máy có ip $C"
-firewall-cmd --zone=dichvu --add-source="$C" --permanent
+echo "Thêm source vào zone dichvu cho máy có ip $ip_web_server_2"
+firewall-cmd --zone=dichvu --add-source="$ip_web_server_2" --permanent
 
 echo "Reload lại tường lửa"
 firewall-cmd --reload

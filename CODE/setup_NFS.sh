@@ -1,20 +1,5 @@
 #! /bin/bash
 
-if systemctl is-active --quiet nfs-*; then
-    echo "NFS Đã được cài đặt, Không đạt yêu cầu..."
-    exit
-fi
-
-echo "Update và upgrade và cài Wget, unzip, tar, epel, remi"
-echo ""
-dnf upgrade --refresh -y
-dnf update -y
-yum -y install wget
-yum -y install unzip
-yum -y install tar
-dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm -y
-dnf install https://rpms.remirepo.net/enterprise/remi-release-8.rpm -y
-
 echo "Cài đặt NFS"
 dnf -y install nfs-utils
 
