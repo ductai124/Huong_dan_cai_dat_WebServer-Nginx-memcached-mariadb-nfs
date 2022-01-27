@@ -32,18 +32,18 @@ fi
 echo "Máy chủ đạt yêu cầu để cài đặt 3 dịch vụ nfs, mariadb và memcached"
 
 # Config Selinux
-se_status=$(getenforce)
-if [ "${se_status}" != "Disabled" ]; then
-    read -r -p "Enter de khoi dong lai OS do Selinux dang bat"
-	sed -i 's/\(^SELINUX=\).*/\SELINUX=disabled/' /etc/sysconfig/selinux
-	sed -i 's/\(^SELINUX=\).*/\SELINUX=disabled/' /etc/selinux/config
-
-	dnf update -y
-	sleep 5
-	reboot
-else
-	sestatus
-fi
+#se_status=$(getenforce)
+#if [ "${se_status}" != "Disabled" ]; then
+#    read -r -p "Enter de khoi dong lai OS do Selinux dang bat"
+#	sed -i 's/\(^SELINUX=\).*/\SELINUX=disabled/' /etc/sysconfig/selinux
+#	sed -i 's/\(^SELINUX=\).*/\SELINUX=disabled/' /etc/selinux/config
+#
+#	dnf update -y
+#	sleep 5
+#	reboot
+#else
+#	sestatus
+#fi
 
 echo "Tiếp tục quá trình cài đặt"	
 
