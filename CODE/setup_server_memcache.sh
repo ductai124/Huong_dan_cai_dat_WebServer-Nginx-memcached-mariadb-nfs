@@ -1,8 +1,16 @@
 #! /bin/bash
+#Vui lòng nhập địa chỉ ip của 2 máy web server vào dòng phía bên dưới 
+#Ví dụ ip_web_server_1="192.168.1.1"
+#ip_web_server_1 và ip_web_server_2 là địa chỉ ip của 2 máy web server
+ip_web_server_1="192.168.1.21"
+ip_web_server_2="192.168.1.22"
+
 if systemctl is-active --quiet memcached; then
     echo "Memcached Đã được cài đặt, Không đạt yêu cầu..."
     exit
 fi
+
+echo "Máy chủ đạt yêu cầu để cài đặt dịch vụ memcached server"
 
 # Config Selinux
 se_status=$(getenforce)
@@ -18,9 +26,7 @@ else
 	sestatus
 fi
 	
-read -r -p "Enter Tiep tuc"
-chattr -ai /etc/resolv.conf
-cat > "/etc/resolv.conf" <<END
+echo "Tiếp tục quá trình cài đặt"
 
 echo "Update và upgrade và cài Wget, unzip, tar, epel, remi"
 dnf upgrade --refresh -y
@@ -30,17 +36,7 @@ dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.r
 dnf install https://rpms.remirepo.net/enterprise/remi-release-8.rpm -y
 echo "Máy chủ đạt yêu cầu để cài đặt dịch vụ memcached"
 
-#Vui lòng nhập địa chỉ ip của 2 máy web server vào dòng phía bên dưới Ví dụ B="192.168.1.1"
 
-#B và C là địa chỉ ip của 2 máy web server
-
-ip_web_server_1="192.168.1.21"
-ip_web_server_2="192.168.1.22"
-
-echo "Ip máy web server số 1 là $ip_web_server_1"
-echo "Ip máy web server số 2 là $ip_web_server_2"
-
-echo "Hãy chắc chắn rằng các địa chỉ ip trên của bạn là đúng"
 
 
 echo "Tiến hành cài đặt"

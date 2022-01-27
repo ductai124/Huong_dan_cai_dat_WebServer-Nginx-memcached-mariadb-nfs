@@ -1,8 +1,19 @@
 #! /bin/bash
+#Vui lòng nhập dải ip vào dòng phía bên dưới ví dụ A="192.168.1.0"
+#Vui lòng nhập địa chỉ ip của 2 máy web server vào dòng phía bên dưới 
+#Ví dụ ip_web_server_1="192.168.1.1"
+#Ta có ip_range là dải ip
+#ip_web_server_1 và ip_web_server_2 là địa chỉ ip của 2 máy web server
+ip_range="192.168.1.0"
+ip_web_server_1="192.168.1.21"
+ip_web_server_2="192.168.1.22"
+
 if systemctl is-active --quiet nfs-*; then
     echo "NFS Đã được cài đặt, Không đạt yêu cầu..."
     exit
 fi
+
+echo "Máy chủ đạt yêu cầu để cài đặt dịch vụ nfs"
 
 # Config Selinux
 se_status=$(getenforce)
@@ -18,9 +29,7 @@ else
 	sestatus
 fi
 	
-read -r -p "Enter Tiep tuc"
-chattr -ai /etc/resolv.conf
-cat > "/etc/resolv.conf" <<END
+echo "Tiếp tục quá trình cài đặt"
 
 echo "Update và upgrade và cài Wget, unzip, tar, epel, remi"
 dnf upgrade --refresh -y
@@ -29,15 +38,7 @@ yum -y install wget unzip tar
 dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm -y
 dnf install https://rpms.remirepo.net/enterprise/remi-release-8.rpm -y
 
-echo "Máy chủ đạt yêu cầu để cài đặt dịch vụ nfs"
-#Vui lòng nhập dải ip vào dòng phía bên dưới ví dụ A="192.168.1.0"
-#Vui lòng nhập địa chỉ ip của 2 máy web server vào dòng phía bên dưới Ví dụ B="192.168.1.1"
-#Ta có A là dải ip
-#B và C là địa chỉ ip của 2 máy web server
-ip_range="192.168.1.0"
-ip_web_server_1="192.168.1.21"
-ip_web_server_2="192.168.1.22"
-#Vui lòng nhập địa chỉ ip của 2 máy web server vào dòng phía bên dưới Ví dụ B = "192.168.1.1
+
 
 
 echo "Dải ip của bạn nhập là $ip_range"

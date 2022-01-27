@@ -1,25 +1,37 @@
 #! /bin/bash
 
+#Vui lòng nhập địa chỉ ip của 2 máy web server vào dòng phía bên dưới 
+#Ví dụ ip_web_server_1="192.168.1.1"
+ip_web_server_1="192.168.1.21"
+ip_web_server_2="192.168.1.22"
 
 if systemctl is-active --quiet nginx; then
     echo "Nginx Đã được cài đặt, Không đạt yêu cầu..."
     exit
 fi
 
+echo "Máy tính đã đủ yêu cầu để cài đặt"
 
-echo "Nhập ip của máy Web server số 1"
-read A
+# Config Selinux
+se_status=$(getenforce)
+if [ "${se_status}" != "Disabled" ]; then
+    read -r -p "Enter de khoi dong lai OS do Selinux dang bat"
+	sed -i 's/\(^SELINUX=\).*/\SELINUX=disabled/' /etc/sysconfig/selinux
+	sed -i 's/\(^SELINUX=\).*/\SELINUX=disabled/' /etc/selinux/config
 
+	dnf update -y
+	sleep 5
+	reboot
+else
+	sestatus
+fi
 
-echo "Nhập ip của máy Web server số 2"
-read B
+echo "Tiếp tục quá trình cài đặt"
 
 echo "Update và upgrade"
 dnf upgrade --refresh -y
 dnf update -y
-yum -y install wget
-yum -y install unzip
-yum -y install tar
+yum -y install wget unzip tar
 dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm -y
 dnf install https://rpms.remirepo.net/enterprise/remi-release-8.rpm -y
 
@@ -35,8 +47,8 @@ echo "Config nginx"
 sed -i '37,$d' /etc/nginx/nginx.conf
 echo -e "\t upstream backend {" >> /etc/nginx/nginx.conf
 echo -e "\t\t least_conn;" >> /etc/nginx/nginx.conf
-echo -e "\t\t server $A max_fails=3 fail_timeout=30 weight=2;" >> /etc/nginx/nginx.conf
-echo -e "\t\t server $B max_fails=3 fail_timeout=30 weight=2;" >> /etc/nginx/nginx.conf
+echo -e "\t\t server $ip_web_server_1 max_fails=3 fail_timeout=30 weight=2;" >> /etc/nginx/nginx.conf
+echo -e "\t\t server $ip_web_server_2 max_fails=3 fail_timeout=30 weight=2;" >> /etc/nginx/nginx.conf
 echo -e "\t}" >> /etc/nginx/nginx.conf
 
 echo -e "\t server {" >> /etc/nginx/nginx.conf
