@@ -98,13 +98,8 @@ có thể dùng git hoặc unzip
 
 cd baitap_tonghop/CODE
 #Những file cần sử dụng
-setup_NFS.sh
-setup_mariadb.sh
-setup_memcache.sh
-setup_mariadb_memcached_nfs.sh
-firewall_setup.sh
 
-#Truy cập vào file setup_server_all.sh tại dòng 23 24 25 lần lượt nhập dải ip, ip web server 1 và ip web server 2
+#Truy cập vào file setup_server_all.sh tại ngay những dòng đầu tiên lần lượt nhập dải ip, ip web server 1 và ip web server 2
 #Ví dụ như mô hình đang sử dụng là sẽ điền như sau
 vi setup_mariadb_memcached_nfs.sh
 
@@ -120,33 +115,6 @@ bash setup_mariadb_memcached_nfs.sh
 
 
 #Tự thiết lập mật khẩu và 1 số mục trong mariadb
-
-
-
-```
-## ***Tiếp theo sẽ tiến hành cài đặt máy web server***
-```php
-#Sử dụng file code 
-setup_web_server.sh
-
-#Phân quyền 
-chmod 755 setup_web_server.sh
-bash setup_web_server.sh
-
-#Nhập ip của máy chủ NFS-Memcached-mariadb và chờ đợi cài đặt
-#sau khi cài đặt thành công ta sẽ kiểm tra các cổng bằng cách cài đặt telnet
-yum install -y telnet
-
-#sau đó kiểm tra các cổng sau
-telnet 192.168.1.23 11211
-
-telnet 192.168.1.23 3306
-
-telnet 192.168.1.23 2049
-
-telnet 192.168.1.23 20048
-
-#Riêng cổng 3306 thì kết nối vào là đóng luôn do chưa thiết lập tài khoản kết nối từ xa vấn đề này ta sẽ quay lại máy chủ chứ mariadb và tạo tài khoản cho phép truy cập từ xa
 
 #Trên máy chủ
 #truy cập vào mysql
@@ -167,21 +135,44 @@ GRANT ALL PRIVILEGES ON *.* TO 'root'@'192.168.1.22' IDENTIFIED BY 'tai083768671
 
 FLUSH PRIVILEGES;
 
-#Sau đó quay lại bên web server thì telnet sẽ kết nối bình thường
+```
+## ***Tiếp theo sẽ tiến hành cài đặt máy web server***
+```php
+#Sử dụng file code 
+setup_web_server.sh
+
+#Truy cập vào file setup_web_server.sh nhập ip của máy chủ NFS-Memcached-mariadb vào ngay những dòng đầu và chờ đợi cài đặt(đã có hướng dẫn và ví dụ trong file)
+#Phân quyền 
+chmod 755 setup_web_server.sh
+bash setup_web_server.sh
+
+#sau khi cài đặt thành công ta sẽ kiểm tra các cổng bằng cách cài đặt telnet
+yum install -y telnet
+
+#sau đó kiểm tra các cổng sau
+telnet 192.168.1.23 11211
+
+telnet 192.168.1.23 3306
+
+telnet 192.168.1.23 2049
+
+telnet 192.168.1.23 20048
 
 ```
 ## ***Cuối cùng là thiết lập cân bằng tải tại máy 192.168.1.20***
 ```php
+#Tải code tại kho code
 #Sử dụng file code 
 setup_loadbalancing.sh
 
+#truy cập vào file setup_loadbalancing.sh tại những dòng đầu nhập ip của web server số 1 và web server số 2 (đã có hướng dẫn trong file)
 #Phân quyền cho file
 chmod 755 setup_loadbalancing.sh
 
 #Chạy tools cài đặt
 bash setup_loadbalancing.sh
 
-#Nhập ip của web server số 1 và web server số 2 sau đó chờ đợi
+
 ```
 
 # 3.	Trường hợp các máy chủ memcached, mariadb, nfs cài đặt riêng lẻ
