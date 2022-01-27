@@ -1,5 +1,4 @@
 #! /bin/bash
-
 echo "Cài đặt memcached"
 dnf install memcached libmemcached -y
 echo "Thông số memcached"

@@ -4,22 +4,47 @@ if systemctl is-active --quiet nfs-*; then
     exit
 fi
 
+# Config Selinux
+se_status=$(getenforce)
+if [ "${se_status}" != "Disabled" ]; then
+    read -r -p "Enter de khoi dong lai OS do Selinux dang bat"
+	sed -i 's/\(^SELINUX=\).*/\SELINUX=disabled/' /etc/sysconfig/selinux
+	sed -i 's/\(^SELINUX=\).*/\SELINUX=disabled/' /etc/selinux/config
+
+	dnf update -y
+	sleep 5
+	reboot
+else
+	sestatus
+fi
+	
+read -r -p "Enter Tiep tuc"
+chattr -ai /etc/resolv.conf
+cat > "/etc/resolv.conf" <<END
+
+echo "Update và upgrade và cài Wget, unzip, tar, epel, remi"
+dnf upgrade --refresh -y
+dnf update -y
+yum -y install wget unzip tar
+dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm -y
+dnf install https://rpms.remirepo.net/enterprise/remi-release-8.rpm -y
+
 echo "Máy chủ đạt yêu cầu để cài đặt dịch vụ nfs"
 #Vui lòng nhập dải ip vào dòng phía bên dưới ví dụ A="192.168.1.0"
 #Vui lòng nhập địa chỉ ip của 2 máy web server vào dòng phía bên dưới Ví dụ B="192.168.1.1"
 #Ta có A là dải ip
 #B và C là địa chỉ ip của 2 máy web server
-A="192.168.1.0"
-B="192.168.1.21"
-C="192.168.1.22"
+ip_range="192.168.1.0"
+ip_web_server_1="192.168.1.21"
+ip_web_server_2="192.168.1.22"
 #Vui lòng nhập địa chỉ ip của 2 máy web server vào dòng phía bên dưới Ví dụ B = "192.168.1.1
 
 
-echo "Dải ip của bạn nhập là $A"
+echo "Dải ip của bạn nhập là $ip_range"
 
 echo "Hãy chắc chắn rằng dải ip trên của bạn là đúng"
 
-bash setup_NFS $A
+bash setup_NFS.sh $ip_range
 
 echo "Tiến hành thiết lập firewall"
 
@@ -32,11 +57,11 @@ firewall-cmd --zone=dichvu --add-service=nfs --permanent
 echo "Thêm dịch vụ nfs3, mountd và rpc-bind"  
 firewall-cmd --zone=dichvu --add-service={nfs3,mountd,rpc-bind} --permanent
 
-echo "Thêm source vào zone dichvu cho máy có ip $B"
-firewall-cmd --zone=dichvu --add-source="$B" --permanent
+echo "Thêm source vào zone dichvu cho máy có ip $ip_web_server_1"
+firewall-cmd --zone=dichvu --add-source="$ip_web_server_1" --permanent
 
-echo "Thêm source vào zone dichvu cho máy có ip $C"
-firewall-cmd --zone=dichvu --add-source="$C" --permanent
+echo "Thêm source vào zone dichvu cho máy có ip $ip_web_server_2"
+firewall-cmd --zone=dichvu --add-source="$ip_web_server_2" --permanent
 
 
 echo "Reload lại tường lửa"

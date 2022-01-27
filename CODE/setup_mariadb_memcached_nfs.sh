@@ -29,6 +29,10 @@ if [ "${se_status}" != "Disabled" ]; then
 else
 	sestatus
 fi
+	
+read -r -p "Enter Tiep tuc"
+chattr -ai /etc/resolv.conf
+cat > "/etc/resolv.conf" <<END
 
 echo "Update và upgrade và cài Wget, unzip, tar, epel, remi"
 dnf upgrade --refresh -y
@@ -63,6 +67,6 @@ bash setup_NFS.sh $ip_range
 
 echo "Thiết lập firewall"
 
-bash firewall_setup $ip_web_server_1 $ip_web_server_2
+bash setup_firewall.sh $ip_web_server_1 $ip_web_server_2
 
 exit 0

@@ -28,7 +28,7 @@ echo "Hãy chắc chắn rằng các địa chỉ ip trên của bạn là đún
 
 echo "Tiến hành cài đặt"
 
-bash setup_mariadb
+bash setup_mariadb.sh
 
 echo "Tiến hành thiết lập firewall"
 
