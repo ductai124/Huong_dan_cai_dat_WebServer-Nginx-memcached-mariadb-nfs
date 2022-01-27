@@ -109,7 +109,7 @@ ip_web_server_2="192.168.1.22"
 
 # Sau đó ta tiến hành cài đặt
 chmod 755 setup_*
-chmod 755 firewall_setup.sh
+
 
 bash setup_mariadb_memcached_nfs.sh
 
@@ -142,6 +142,10 @@ FLUSH PRIVILEGES;
 setup_web_server.sh
 
 #Truy cập vào file setup_web_server.sh nhập ip của máy chủ NFS-Memcached-mariadb vào ngay những dòng đầu và chờ đợi cài đặt(đã có hướng dẫn và ví dụ trong file)
+vi setup_web_server.sh
+
+ip_server_nfs="192.168.1.23"
+
 #Phân quyền 
 chmod 755 setup_web_server.sh
 bash setup_web_server.sh
@@ -166,6 +170,10 @@ telnet 192.168.1.23 20048
 setup_loadbalancing.sh
 
 #truy cập vào file setup_loadbalancing.sh tại những dòng đầu nhập ip của web server số 1 và web server số 2 (đã có hướng dẫn trong file)
+vi setup_loadbalancing.sh
+
+ip_web_server_1="192.168.1.21"
+ip_web_server_2="192.168.1.22"
 #Phân quyền cho file
 chmod 755 setup_loadbalancing.sh
 
@@ -181,28 +189,36 @@ bash setup_loadbalancing.sh
 #Cài đặt mariadb bằng 2 file
 setup_server_mariadb.sh
 setup_mariadb.sh
-#Truy cập vào file setup_server_mariadb.sh tìm đến dòng sau và thay lần lượt ip web server 1 và ip web server 2
+#Truy cập vào file setup_server_mariadb.sh tìm đến dòng sau và thay lần lượt ip web server 1 và ip web server 2(đã có hướng dẫn trong file)
 #Ví dụ như mô hình đang sử dụng là sẽ điền như sau
 
 vi setup_server_mariadb.sh
 
-B="192.168.1.21"
-C="192.168.1.22"
+ip_web_server_1="192.168.1.21"
+ip_web_server_2="192.168.1.22"
+
+#Phân quyền và cài đặt
+chmod 755 setup_server_mariadb.sh
+
+bash setup_server_mariadb.sh
 ```
 ## ***Cài đặt memcached server***
 ```php
 #Cài đặt memcached bằng 2 file
 setup_server_memcache.sh
 setup_memcache.sh
-#Truy cập vào file setup_server_memcache.sh tìm đến dòng sau và thay lần lượt ip web server 1 và ip web server 2
+#Truy cập vào file setup_server_memcache.sh tìm đến dòng sau và thay lần lượt ip web server 1 và ip web server 2 (đã có hướng dẫn trong file)
 #Ví dụ như mô hình đang sử dụng là sẽ điền như sau
 
 vi setup_server_memcache.sh
 
-B="192.168.1.21"
-C="192.168.1.22"
+ip_web_server_1="192.168.1.21"
+ip_web_server_2="192.168.1.22"
 
+#Phân quyền và cài đặt
+chmod 755 setup_server_memcache.sh
 
+bash setup_server_memcache.sh
 ```
 ## ***Cài đặt nfs server***
 ```php
@@ -214,8 +230,13 @@ setup_NFS.sh
 
 vi setup_server_nfs.sh
 
-A="192.168.1.0"
-B="192.168.1.21"
-C="192.168.1.22"
+ip_range="192.168.1.0"
+ip_web_server_1="192.168.1.21"
+ip_web_server_2="192.168.1.22"
+
+#Phân quyền và cài đặt
+chmod 755 setup_server_nfs.sh
+
+bash setup_server_nfs.sh
 
 ```
