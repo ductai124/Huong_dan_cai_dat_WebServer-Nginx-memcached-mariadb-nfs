@@ -90,8 +90,8 @@ vi /etc/nginx/nginx.conf
     * Các máy phát sinh sẽ là
     * Mấy có ip là 192.168.1.23 sẽ đóng vai trò làm 3 máy (trong thực tế các dịch vụ sẽ phải để riêng)
         * Mariadb(mysql)(nếu đã được tách dịch vụ từ đầu thì vẫn là máy cũ)
-        * NFS server(Phát sinh thêm)
-        * Memcached server(phát sinh thêm)
+        * NFS server(Phát sinh thêm do có thêm 1 con web server)
+        * Memcached server(phát sinh thêm do có thêm 1 con web server)
     * Máy chủ nginx đóng vài trò là máy cân bằng tải: 192.168.1.20
     * Máy chủ nginx số 2: 192.168.1.22
 
