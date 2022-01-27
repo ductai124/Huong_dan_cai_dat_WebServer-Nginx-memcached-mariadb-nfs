@@ -69,52 +69,49 @@ vi /etc/nginx/nginx.conf
 
 ***
 # 1.	Giới thiệu mô hình
-* Trong quá trình xây dựng 1 hệ thống mô hình của chúng ta sẽ dần dần lớn lên và phát sinh ra đây là 1 mô hình đã được phát triển dần đàn theo nhu cầu sử dụng với các dịch vụ được tách biệt với nhau và sử dụng cân bằng tải giảm sự quá tải của hệ thống
+* Trong quá trình xây dựng 1 hệ thống mô hình của chúng ta sẽ dần dần lớn lên và phát sinh ra đây là 1 mô hình đã được phát triển dần đàn theo nhu cầu sử dụng với các dịch vụ được tách biệt với nhau và sử dụng cân bằng tải giảm sự quá tải của hệ thống. Vì trong 1 hệ thống chỉ 1 máy chủ thì sẽ không chịu được số lượng truy cập ngày càng tăng vậy nên mô hình trên giúp phân tán các dịch vụ cho từng máy và cân bằng tải giúp giảm tải lượng truy cập phân chia lượng truy cập cho phù hợp
 * Do giới hạn về mặt tài nguyên nên mô hình sẽ gồm:
-    * Load balancing với ip là 192.168.1.20
+    * Load balancing với IP là 192.168.1.20
 
-    * Web server 1 với ip là: 192.168.1.21
+    * Web server 1 với IP là: 192.168.1.21
 
-    * Web server 2 với ip là: 192.168.1.22
+    * Web server 2 với IP là: 192.168.1.22
 
-    * Mấy có ip là 192.168.1.23 sẽ đóng vai trò làm 3 máy
-        * Mariadb(mysql)
+    * Máy có IP là 192.168.1.23 sẽ đóng vai trò làm 3 máy
+        * Mariadb (mysql)
 
         * NFS server
 
         * Memcached server
-* Mô tả:
-    * Ban đầu có 1 **máy chủ web số 1: 192.168.1.21** và chưa cần sử dụng **memcached và nfs server** sau 1 thời gian đi vào hoạt động máy chủ đã không thể chịu nổi lượng truy cập lớn ngày càng tăng của người dùng từ đó thì ta cần tách dịch vụ.
-    * Thậm chí máy 1 có thể đóng luôn cả vai trò là mariadb cũng được hoặc sẽ có thêm 1 máy là **máy có ip là 192.168.1.23 đóng vai trò chứa dịch vụ mariadb**
-    * Do nhu cầu truy cập cao và 1 máy chủ không thể tải hết được ta sẽ phát sinh ra phải tạo thêm **1 máy chủ chứa nfs server ,mariadb và memcached**, **1 con máy web server** nữa và **1 con cân bằng tải*. Từ đó sẽ thiết lập thêm 2 máy
-    * Các máy phát sinh sẽ là
-    * Mấy có ip là 192.168.1.23 sẽ đóng vai trò làm 3 máy (trong thực tế các dịch vụ sẽ phải để riêng)
-        * Mariadb(mysql)(nếu đã được tách dịch vụ từ đầu thì vẫn là máy cũ)
-        * NFS server(Phát sinh thêm do có thêm 1 con web server)
-        * Memcached server(phát sinh thêm do có thêm 1 con web server)
-    * Máy chủ nginx đóng vài trò là máy cân bằng tải: 192.168.1.20
-    * Máy chủ nginx số 2: 192.168.1.22
+* *Lưu ý*: Mô hình thực tế thì 3 dịch vụ của máy 192.168.1.23 sẽ phải tách ra làm 3 máy chủ chứa dịch vụ tương ứng chứ không được đặt chung như vậy
 
-# 2.	Tiến hành cài đặt
-* ***Lưu ý*** : **Mô hình này sẽ được cài đặt từ những OS mới tinh chưa được cài đặt các dịch vụ gì vậy nên hãy kiểm tra kỹ OS xem liệu đã có cài đặt các dịch vụ gì trước trùng với các dịch vụ của mô hình không nếu đã có thì sẽ không thực hiện được cài đặt do không thể kiểm soát được những gì đã được cài đặt từ trước**
-* Đầu tiên sẽ tiến hành cài đặt 4 con máy ảo với ip tương tự như trên
-* Việc đầu tiên ở tất cả các máy chúng ta sẽ tiến hành tắt SELINUX và reboot lại hệ thống
+# 2. Tiến hành cài đặt
+* Đầu tiên sẽ tiến hành cài đặt 4 con máy ảo với IP tương tự như trên
+* Việc đầu tiên ở tất cả các máy chúng ta sẽ tiến hành tắt SELINUX, unzip, telnet, git và reboot lại hệ thống
 ```php
 sed -i 's/\(^SELINUX=\).*/\SELINUX=disabled/' /etc/sysconfig/selinux
 sed -i 's/\(^SELINUX=\).*/\SELINUX=disabled/' /etc/selinux/config
+yum -y install telnet git
+
 reboot
 ```
-## ***Sau đó ta sẽ tiến hành cài đặt bắt đầu từ máy 192.168.1.23(máy chúa 3 dịch vụ mariadb, memcached và NFS server) đầu tiên***
-* Ta hãy sử dụng những file sau trên kho code 
+## ***Sau đó ta sẽ tiến hành cài đặt bắt đầu từ  có ip 192.168.1.23 (máy chúa 3 dịch vụ mariadb, memcached và NFS server) đầu tiên***
 ```php
-#Tải code từ kho code về
-có thể dùng git hoặc unzip
+#Ta hãy sử dụng những file sau trên kho code, tải code từ kho code,  chúng ta dùng git để sử dụng và tiến hành cài đặt như sau 
 
-cd baitap_tonghop/CODE
-#Những file cần sử dụng
+ git clone https://github.com/ductai124/Baitap_tonghop.git
 
-#Truy cập vào file setup_server_all.sh tại ngay những dòng đầu tiên lần lượt nhập dải ip, ip web server 1 và ip web server 2
-#Ví dụ như mô hình đang sử dụng là sẽ điền như sau
+#Sau đó chúng ta tiếp tục cd vào thư mục như sau:
+
+cd Baitap_tonghop-main/CODE/
+
+#Sau đó ta ls để xem các file trong thu mực gồm những file gì:
+ls
+
+#Truy cập vào file setup_server_all.sh tại ngay những dòng đầu tiên lần lượt nhập dải ip, ip web server 1 và ip web server 2 tương ứng ở trên
+
+#Ví dụ như mô hình đang sử dụng thì chúng ta sẽ điền như sau
+
 vi setup_mariadb_memcached_nfs.sh
 
 ip_range="192.168.1.0"
@@ -122,16 +119,15 @@ ip_web_server_1="192.168.1.21"
 ip_web_server_2="192.168.1.22"
 
 # Sau đó ta tiến hành cài đặt
+
 chmod 755 setup_*
-
-
 bash setup_mariadb_memcached_nfs.sh
 
 
 #Tự thiết lập mật khẩu và 1 số mục trong mariadb
 
 #Trên máy chủ
-#truy cập vào mysql
+#Truy cập vào mysql
 mysql -u root -p
 #Tạo tài khoản mới để truy cập từ xa
 create user 'tai123'@'%' identified by 'tai0837686717';
@@ -150,59 +146,97 @@ GRANT ALL PRIVILEGES ON *.* TO 'root'@'192.168.1.22' IDENTIFIED BY 'tai083768671
 FLUSH PRIVILEGES;
 
 ```
-## ***Tiếp theo sẽ tiến hành cài đặt máy web server(192.168.1.21 và 192.168.1.22)***
+## ***Tiếp theo sẽ tiến hành cài đặt máy web server (IP:192.168.1.21 và IP: 192.168.1.22)***
 ```php
+#Ta hãy sử dụng những file sau trên kho code, tải code từ kho code và chúng ta dùng git để sử dụng và tiến hành cài đặt như sau 
+
+ git clone https://github.com/ductai124/Baitap_tonghop.git
+
+#Sau đó chúng ta tiếp tục cd vào thư mục như sau:
+cd Baitap_tonghop-main/CODE/
+
+#Truy cập vào file setup_server_all.sh tại ngay những dòng đầu tiên lần lượt nhập dải ip, ip web server 1 và ip web server 2 tương ứng ở trên
+
 #Web server có thể cài đặt cùng lúc và 2 web server cài đặt giống nhau nên sẽ sử dụng chung hướng dẫn này
+
 #Trước khi cài đặt chúng ta có thể kiểm tra các cổng đã được thông từ bên phí máy server chưa
-yum install -y telnet
-#sau đó kiểm tra các cổng sau(ví dụ kiểm tra các cổng trên máy server có ip 192.168.1.23)
+
+#Sau đó kiểm tra các cổng sau(ví dụ kiểm tra các cổng trên máy server có IP 192.168.1.23)
+
 telnet 192.168.1.23 11211
 telnet 192.168.1.23 3306
 telnet 192.168.1.23 2049
 telnet 192.168.1.23 20048
 
 #Sử dụng file code 
+
 setup_web_server.sh
 
 #Truy cập vào file setup_web_server.sh nhập ip của máy chủ NFS-Memcached-mariadb vào ngay những dòng đầu và chờ đợi cài đặt(đã có hướng dẫn và ví dụ trong file)
-vi setup_web_server.sh
 
+vi setup_web_server.sh
 ip_server_nfs="192.168.1.23"
 
 #Phân quyền 
+
 chmod 755 setup_web_server.sh
 bash setup_web_server.sh
-
-
 
 ```
 ## ***Cuối cùng là thiết lập cân bằng tải tại máy có ip là 192.168.1.20***
 ```php
-#Tải code tại kho code
+#Ta hãy sử dụng những file sau trên kho code, tải code từ kho code và chúng ta dùng git để sử dụng và tiến hành cài đặt như sau 
+
+ git clone https://github.com/ductai124/Baitap_tonghop.git
+
+#Sau đó chúng ta tiếp tục cd vào thư mục như sau:
+
+cd Baitap_tonghop-main/CODE/
+
+#Truy cập vào file setup_server_all.sh tại ngay những dòng đầu tiên lần lượt nhập dải ip, ip web server 1 và ip web server 2 tương ứng ở trên
+
 #Sử dụng file code 
+
 setup_loadbalancing.sh
 
-#truy cập vào file setup_loadbalancing.sh tại những dòng đầu nhập ip của web server số 1 và web server số 2 (đã có hướng dẫn trong file)
+#Truy cập vào file setup_loadbalancing.sh tại những dòng đầu nhập ip của web server số 1  và web server số 2 tương ứng ở trên (đã có hướng dẫn trong file)
+
 vi setup_loadbalancing.sh
 
 ip_web_server_1="192.168.1.21"
 ip_web_server_2="192.168.1.22"
+
 #Phân quyền cho file
+
 chmod 755 setup_loadbalancing.sh
 
 #Chạy tools cài đặt
+
 bash setup_loadbalancing.sh
 
 
 ```
 
 # 3.	Trường hợp các máy chủ memcached, mariadb, nfs cài đặt riêng lẻ
+## ***Đầu tiên chung ta tải code từ kho code về***
+```php
+##Ta hãy sử dụng những file sau trên kho code, tải code từ kho code và chúng ta dùng git để sử dụng và tiến hành cài đặt như sau 
+
+ git clone https://github.com/ductai124/Baitap_tonghop.git
+
+#Sau đó chúng ta tiếp tục cd vào thư mục như sau:
+
+cd Baitap_tonghop-main/CODE/
+```
 ## ***Cài đặt mariadb***
 ```php
-#Cài đặt mariadb bằng 2 file
+#Cài đặt mariadb bằng 2 file sau:
+
 setup_server_mariadb.sh
 setup_mariadb.sh
-#Truy cập vào file setup_server_mariadb.sh tìm đến dòng sau và thay lần lượt ip web server 1 và ip web server 2(đã có hướng dẫn trong file)
+
+#Truy cập vào file setup_server_mariadb.sh tìm đến dòng sau và thay lần lượt ip web server 1 và ip web server 2 (đã có hướng dẫn trong file)
+
 #Ví dụ như mô hình đang sử dụng là sẽ điền như sau
 
 vi setup_server_mariadb.sh
@@ -211,16 +245,19 @@ ip_web_server_1="192.168.1.21"
 ip_web_server_2="192.168.1.22"
 
 #Phân quyền và cài đặt
-chmod 755 setup_server_mariadb.sh
 
+chmod 755 setup_server_mariadb.sh
 bash setup_server_mariadb.sh
 ```
 ## ***Cài đặt memcached server***
 ```php
-#Cài đặt memcached bằng 2 file
+#Cài đặt memcached bằng 2 file sau:
+
 setup_server_memcache.sh
 setup_memcache.sh
-#Truy cập vào file setup_server_memcache.sh tìm đến dòng sau và thay lần lượt ip web server 1 và ip web server 2 (đã có hướng dẫn trong file)
+
+#Truy cập vào file setup_server_memcache.sh tìm đến dòng sau và thay lần lượt ip web server 1 và ip web server 2 tương ứng ở trên (đã có hướng dẫn trong file)
+
 #Ví dụ như mô hình đang sử dụng là sẽ điền như sau
 
 vi setup_server_memcache.sh
@@ -229,16 +266,20 @@ ip_web_server_1="192.168.1.21"
 ip_web_server_2="192.168.1.22"
 
 #Phân quyền và cài đặt
-chmod 755 setup_server_memcache.sh
 
+chmod 755 setup_server_memcache.sh
 bash setup_server_memcache.sh
+
 ```
 ## ***Cài đặt nfs server***
 ```php
-#Cài đặt nfs bằng 2 file
+#Cài đặt nfs bằng 2 file sau:
+
 setup_server_nfs.sh
 setup_NFS.sh
+
 #Truy cập vào file setup_server_nfs.sh tìm đến dòng lần lượt nhập dải ip, ip web server 1 và ip web server 2 theo hướng dẫn có ghi trong file
+
 #Ví dụ như mô hình đang sử dụng là sẽ điền như sau
 
 vi setup_server_nfs.sh
@@ -248,8 +289,8 @@ ip_web_server_1="192.168.1.21"
 ip_web_server_2="192.168.1.22"
 
 #Phân quyền và cài đặt
-chmod 755 setup_server_nfs.sh
 
+chmod 755 setup_server_nfs.sh
 bash setup_server_nfs.sh
 
 ```
