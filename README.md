@@ -69,20 +69,34 @@ vi /etc/nginx/nginx.conf
 
 ***
 # 1.	Giới thiệu mô hình
+* Trong quá trình xây dựng 1 hệ thống mô hình của chúng ta sẽ dần dần lớn lên và phát sinh ra đây là 1 mô hình đã được phát triển dần đàn theo nhu cầu sử dụng với các dịch vụ được tách biệt với nhau và sử dụng cân bằng tải giảm sự quá tải của hệ thống
 * Do giới hạn về mặt tài nguyên nên mô hình sẽ gồm:
-    * Load balancing 192.168.1.20
+    * Load balancing với ip là 192.168.1.20
 
-    * Web server 1: 192.168.1.21
+    * Web server 1 với ip là: 192.168.1.21
 
-    * Web server 2: 192.168.1.22
+    * Web server 2 với ip là: 192.168.1.22
 
-    * Mấy 192.168.1.23 sẽ đóng vai trò làm 3 máy
+    * Mấy có ip là 192.168.1.23 sẽ đóng vai trò làm 3 máy
         * Mariadb(mysql)
 
         * NFS server
 
         * Memcached server
+* Mô tả:
+    * Ban đầu có 1 **máy chủ web số 1: 192.168.1.21** và chưa cần sử dụng **memcached và nfs server** sau 1 thời gian đi vào hoạt động máy chủ đã không thể chịu nổi lượng truy cập lớn ngày càng tăng của người dùng từ đó thì ta cần tách dịch vụ.
+    * Thậm chí máy 1 có thể đóng luôn cả vai trò là mariadb cũng được hoặc sẽ có thêm 1 máy là **máy có ip là 192.168.1.23 đóng vai trò chứa dịch vụ mariadb**
+    * Do nhu cầu truy cập cao và 1 máy chủ không thể tải hết được ta sẽ phát sinh ra phải tạo thêm **1 máy chủ chứa nfs server ,mariadb và memcached**, **1 con máy web server** nữa và **1 con cân bằng tải*. Từ đó sẽ thiết lập thêm 2 máy
+    * Các máy phát sinh sẽ là
+    * Mấy có ip là 192.168.1.23 sẽ đóng vai trò làm 3 máy (trong thực tế các dịch vụ sẽ phải để riêng)
+        * Mariadb(mysql)(nếu đã được tách dịch vụ từ đầu thì vẫn là máy cũ)
+        * NFS server(Phát sinh thêm)
+        * Memcached server(phát sinh thêm)
+    * Máy chủ nginx đóng vài trò là máy cân bằng tải: 192.168.1.20
+    * Máy chủ nginx số 2: 192.168.1.22
+
 # 2.	Tiến hành cài đặt
+* ***Lưu ý*** : **Mô hình này sẽ được cài đặt từ những OS mới tinh chưa được cài đặt các dịch vụ gì vậy nên hãy kiểm tra kỹ OS xem liệu đã có cài đặt các dịch vụ gì trước trùng với các dịch vụ của mô hình không nếu đã có thì sẽ không thực hiện được cài đặt do không thể kiểm soát được những gì đã được cài đặt từ trước**
 * Đầu tiên sẽ tiến hành cài đặt 4 con máy ảo với ip tương tự như trên
 * Việc đầu tiên ở tất cả các máy chúng ta sẽ tiến hành tắt SELINUX và reboot lại hệ thống
 ```php
@@ -90,7 +104,7 @@ sed -i 's/\(^SELINUX=\).*/\SELINUX=disabled/' /etc/sysconfig/selinux
 sed -i 's/\(^SELINUX=\).*/\SELINUX=disabled/' /etc/selinux/config
 reboot
 ```
-## ***Sau đó ta sẽ tiến hành cài đặt bắt đầu từ máy 192.168.1.23 đầu tiên***
+## ***Sau đó ta sẽ tiến hành cài đặt bắt đầu từ máy 192.168.1.23(máy chúa 3 dịch vụ mariadb, memcached và NFS server) đầu tiên***
 * Ta hãy sử dụng những file sau trên kho code 
 ```php
 #Tải code từ kho code về
@@ -136,8 +150,17 @@ GRANT ALL PRIVILEGES ON *.* TO 'root'@'192.168.1.22' IDENTIFIED BY 'tai083768671
 FLUSH PRIVILEGES;
 
 ```
-## ***Tiếp theo sẽ tiến hành cài đặt máy web server***
+## ***Tiếp theo sẽ tiến hành cài đặt máy web server(192.168.1.21 và 192.168.1.22)***
 ```php
+#Web server có thể cài đặt cùng lúc và 2 web server cài đặt giống nhau nên sẽ sử dụng chung hướng dẫn này
+#Trước khi cài đặt chúng ta có thể kiểm tra các cổng đã được thông từ bên phí máy server chưa
+yum install -y telnet
+#sau đó kiểm tra các cổng sau(ví dụ kiểm tra các cổng trên máy server có ip 192.168.1.23)
+telnet 192.168.1.23 11211
+telnet 192.168.1.23 3306
+telnet 192.168.1.23 2049
+telnet 192.168.1.23 20048
+
 #Sử dụng file code 
 setup_web_server.sh
 
@@ -150,20 +173,10 @@ ip_server_nfs="192.168.1.23"
 chmod 755 setup_web_server.sh
 bash setup_web_server.sh
 
-#sau khi cài đặt thành công ta sẽ kiểm tra các cổng bằng cách cài đặt telnet
-yum install -y telnet
 
-#sau đó kiểm tra các cổng sau
-telnet 192.168.1.23 11211
-
-telnet 192.168.1.23 3306
-
-telnet 192.168.1.23 2049
-
-telnet 192.168.1.23 20048
 
 ```
-## ***Cuối cùng là thiết lập cân bằng tải tại máy 192.168.1.20***
+## ***Cuối cùng là thiết lập cân bằng tải tại máy có ip là 192.168.1.20***
 ```php
 #Tải code tại kho code
 #Sử dụng file code 
