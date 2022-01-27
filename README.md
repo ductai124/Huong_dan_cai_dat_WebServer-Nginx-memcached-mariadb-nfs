@@ -93,27 +93,30 @@ reboot
 ## ***Sau đó ta sẽ tiến hành cài đặt bắt đầu từ máy 192.168.1.23 đầu tiên***
 * Ta hãy sử dụng những file sau trên kho code 
 ```php
-#Copy Code của các file code sau hoặc tải các file code sau về và để chúng tại thư mục root
-#Xóa đuổi txt đi hoặc vào trong file setup_server_mariadb_nfs_memcache.txt thêm đuôi txt cho các file bash đề phòng không chay được
+#Tải code từ kho code về
+có thể dùng git hoặc unzip
+
+cd baitap_tonghop/CODE
+#Những file cần sử dụng
 setup_NFS.sh
 setup_mariadb.sh
 setup_memcache.sh
-setup_server_all.sh
+setup_mariadb_memcached_nfs.sh
 firewall_setup.sh
 
 #Truy cập vào file setup_server_all.sh tại dòng 23 24 25 lần lượt nhập dải ip, ip web server 1 và ip web server 2
 #Ví dụ như mô hình đang sử dụng là sẽ điền như sau
-vi setup_server_all.sh
+vi setup_mariadb_memcached_nfs.sh
 
-A="192.168.1.0"
-B="192.168.1.21"
-C="192.168.1.22"
+ip_range="192.168.1.0"
+ip_web_server_1="192.168.1.21"
+ip_web_server_2="192.168.1.22"
 
 # Sau đó ta tiến hành cài đặt
 chmod 755 setup_*
 chmod 755 firewall_setup.sh
 
-bash setup_server_all.sh
+bash setup_mariadb_memcached_nfs.sh
 
 
 #Tự thiết lập mật khẩu và 1 số mục trong mariadb
