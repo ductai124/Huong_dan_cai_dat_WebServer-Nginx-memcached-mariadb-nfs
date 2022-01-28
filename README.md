@@ -69,7 +69,7 @@ vi /etc/nginx/nginx.conf
 
 ***
 # 1.	Giới thiệu mô hình
-* Trong quá trình xây dựng 1 hệ thống mô hình của chúng ta sẽ dần dần lớn lên và phát sinh ra đây là 1 mô hình đã được phát triển dần đàn theo nhu cầu sử dụng với các dịch vụ được tách biệt với nhau và sử dụng cân bằng tải giảm sự quá tải của hệ thống. Vì trong 1 hệ thống chỉ 1 máy chủ thì sẽ không chịu được số lượng truy cập ngày càng tăng vậy nên mô hình trên giúp phân tán các dịch vụ cho từng máy và cân bằng tải giúp giảm tải lượng truy cập phân chia lượng truy cập cho phù hợp
+* Trong quá trình xây dựng 1 hệ thống mô hình của chúng ta sẽ dần dần lớn lên và máy chủ sẽ dần dần bị quá tải bởi số lượng truy cập dịch vụ ngày càng tăng cao. Vì trong 1 hệ thống chỉ 1 máy chủ thì sẽ không chịu được số lượng truy cập ngày càng tăng vậy nên mô hình trên giúp phân tán các dịch vụ cho từng máy và cân bằng tải giúp giảm tải lượng truy cập phân chia lượng truy cập cho phù hợp
 * Do giới hạn về mặt tài nguyên nên mô hình sẽ gồm:
     * Load balancing với IP là 192.168.1.20
 
