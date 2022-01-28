@@ -18,6 +18,7 @@ systemctl enable --now mariadb
 systemctl start mariadb
 echo "Vui lòng nhập thiết mật khẩu và các thiết lập của mariadb"
 #mysql_secure_installation
+echo "Mật khẩu của tài khoản root là : $1"
 
 mysql_secure_installation <<EOF
 
@@ -25,10 +26,10 @@ mysql_secure_installation <<EOF
 y
 
 #New password:
-abc
+$1
 
 #Re-enter new password:
-${1}
+$1
 
 #remove anonymous users
 y
