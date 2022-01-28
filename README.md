@@ -95,7 +95,7 @@ yum -y install telnet git
 
 reboot
 ```
-## ***Sau đó ta sẽ tiến hành cài đặt bắt đầu từ  có ip 192.168.1.23 (máy chúa 3 dịch vụ mariadb, memcached và NFS server) đầu tiên***
+## ***Tải kho code và cấu hình trước khi tiến hành cài đặt***
 ```php
 #Ta hãy sử dụng những file sau trên kho code, tải code từ kho code,  chúng ta dùng git để sử dụng và tiến hành cài đặt như sau 
 
@@ -110,15 +110,27 @@ ls
 
 #Truy cập vào file setup_server_all.sh tại ngay những dòng đầu tiên lần lượt nhập dải ip, ip web server 1 và ip web server 2 tương ứng ở trên
 
-#Ví dụ như mô hình đang sử dụng thì chúng ta sẽ điền như sau
+#Hãy truy cập vào file config và điền đúng ip dải ip theo máy của mình
+#Như mô hình trên thì file config sẽ được cấu hình như sau
 
-vi setup_mariadb_memcached_nfs.sh
+vi setup.conf.sh
 
 ip_range="192.168.1.0"
 ip_web_server_1="192.168.1.21"
 ip_web_server_2="192.168.1.22"
+ip_server_nfs="192.168.1.23"
+ip_server_mariadb="192.168.1.23"
+ip_server_memcached="192.168.1.23"
 
+
+```
+### ***Lưu ý:*** file config trên ở tất cả các máy sẽ phải giống nhau nếu không sẽ dẫn đến việc cài đặt sai
+
+## ***Sau đó ta sẽ tiến hành cài đặt bắt đầu từ  có ip 192.168.1.23 (máy chúa 3 dịch vụ mariadb, memcached và NFS server) đầu tiên***
 # Sau đó ta tiến hành cài đặt
+```php
+#Truy cập vào file sau
+cd Baitap_tonghop-main/CODE/
 #Trong quá trình cài đặt sẽ có bước phải tự thiết lập mật khẩu và 1 số mục trong mariadb hãy để ý
 
 #Phân quyền
@@ -157,21 +169,6 @@ FLUSH PRIVILEGES;
 #Sau đó chúng ta tiếp tục cd vào thư mục như sau:
 cd Baitap_tonghop-main/CODE/
 
-#Truy cập vào file setup_server_all.sh tại ngay những dòng đầu tiên lần lượt nhập dải ip, ip web server 1 và ip web server 2 tương ứng ở trên
-#Web server có thể cài đặt cùng lúc và 2 web server cài đặt giống nhau nên sẽ sử dụng chung hướng dẫn này
-#Trước khi cài đặt chúng ta có thể kiểm tra các cổng đã được thông từ bên phí máy server chưa
-#Sau đó kiểm tra các cổng sau(ví dụ kiểm tra các cổng trên máy server có IP 192.168.1.23)
-
-telnet 192.168.1.23 11211
-telnet 192.168.1.23 3306
-telnet 192.168.1.23 2049
-telnet 192.168.1.23 20048
-
-#Truy cập vào file setup_web_server.sh nhập ip của máy chủ NFS-Memcached-mariadb vào ngay những dòng đầu và chờ đợi cài đặt(đã có hướng dẫn và ví dụ trong file)
-
-vi setup_web_server.sh
-ip_server_nfs="192.168.1.23"
-
 #Phân quyền 
 
 chmod 755 setup_*
@@ -189,14 +186,6 @@ bash setup_web_server.sh
 #Sau đó chúng ta tiếp tục cd vào thư mục như sau:
 
 cd Baitap_tonghop-main/CODE/
-
-#Truy cập vào file setup_server_all.sh tại ngay những dòng đầu tiên lần lượt nhập dải ip, ip web server 1 và ip web server 2 tương ứng ở trên
-#Truy cập vào file setup_loadbalancing.sh tại những dòng đầu nhập ip của web server số 1  và web server số 2 tương ứng ở trên (đã có hướng dẫn trong file)
-
-vi setup_loadbalancing.sh
-
-ip_web_server_1="192.168.1.21"
-ip_web_server_2="192.168.1.22"
 
 #Phân quyền cho file
 
@@ -221,31 +210,16 @@ cd Baitap_tonghop-main/CODE/
 ```
 ## ***Đối với máy cần cài đặt mariadb***
 ```php
-#Truy cập vào file setup_server_mariadb.sh tìm đến dòng sau và thay lần lượt ip web server 1 và ip web server 2 (đã có hướng dẫn trong file)
-
-#Ví dụ như mô hình đang sử dụng là sẽ điền như sau
-
-vi setup_server_mariadb.sh
-
-ip_web_server_1="192.168.1.21"
-ip_web_server_2="192.168.1.22"
-
 #Phân quyền và cài đặt
 
 chmod 755 setup_*
+
+#Cài đặt
+
 bash setup_server_mariadb.sh
 ```
 ## ***Đối với máy cần cài đặt memcached server***
 ```php
-#Truy cập vào file setup_server_memcache.sh tìm đến dòng sau và thay lần lượt ip web server 1 và ip web server 2 tương ứng ở trên (đã có hướng dẫn trong file)
-
-#Ví dụ như mô hình đang sử dụng là sẽ điền như sau
-
-vi setup_server_memcache.sh
-
-ip_web_server_1="192.168.1.21"
-ip_web_server_2="192.168.1.22"
-
 #Phân quyền và cài đặt
 
 chmod 755 setup_*
@@ -254,16 +228,6 @@ bash setup_server_memcache.sh
 ```
 ## ***Đối với máy cần cài đặt nfs server***
 ```php
-#Truy cập vào file setup_server_nfs.sh tìm đến dòng lần lượt nhập dải ip, ip web server 1 và ip web server 2 theo hướng dẫn có ghi trong file
-
-#Ví dụ như mô hình đang sử dụng là sẽ điền như sau
-
-vi setup_server_nfs.sh
-
-ip_range="192.168.1.0"
-ip_web_server_1="192.168.1.21"
-ip_web_server_2="192.168.1.22"
-
 #Phân quyền và cài đặt
 
 chmod 755 setup_*
