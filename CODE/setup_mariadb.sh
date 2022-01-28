@@ -26,11 +26,11 @@ mysql_secure_installation <<EOF
 y
 
 #New password:
-$1
-
+#$1
+send \"$1\r\"
 #Re-enter new password:
-$1
-
+#$1
+send \"$1\r\"
 #remove anonymous users
 y
 
