@@ -17,8 +17,45 @@ echo "Khởi động mariadb"
 systemctl enable --now mariadb
 systemctl start mariadb
 echo "Vui lòng nhập thiết mật khẩu và các thiết lập của mariadb"
-mysql_secure_installation
+#mysql_secure_installation
+
+mysql_secure_installation <<EOF
+
+#Set root password
+y
+
+#New password:
+abc
+
+#Re-enter new password:
+$1
+
+#remove anonymous users
+y
+
+#disallow root login remotely
+y
+
+#remove test database
+y
+
+#connect to MariaDB with root
+y
+
+EOF
 
 echo "Cài đặt mariadb hoàn thành"
+
+
+echo "Tao user"
+
+mysql -uroot -p$1 <<MYSQL_SCRIPT
+
+create user '$2'@'%' identified by '$3';
+
+GRANT ALL PRIVILEGES ON *.* TO '$2'@'%' IDENTIFIED BY '$3';
+
+FLUSH PRIVILEGES;
+MYSQL_SCRIPT
 
 exit 0

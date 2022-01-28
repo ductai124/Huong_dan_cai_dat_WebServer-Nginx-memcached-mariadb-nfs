@@ -58,7 +58,7 @@ echo "Dải ip được cấp cho NFS là là : $ip_range"
 
 bash setup_NFS.sh $ip_range
 
-bash setup_mariadb.sh
+bash setup_mariadb.sh $pw_root $remote_user_access $user_pw
 
 echo "Thiết lập firewall"
 bash setup_firewall.sh $ip_web_server_1 $ip_web_server_2
