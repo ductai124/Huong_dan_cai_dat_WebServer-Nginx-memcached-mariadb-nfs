@@ -1,7 +1,6 @@
 #! /bin/bash
 source /root/Baitap_tonghop-main/CODE/setup.conf.sh
 
-
 echo "Dải ip của bạn nhập là $ip_range"
 echo "Ip máy web server số 1 là $ip_web_server_1"
 echo "Ip máy web server số 2 là $ip_web_server_2"

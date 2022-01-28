@@ -28,7 +28,7 @@ y
 abc
 
 #Re-enter new password:
-$1
+${1}
 
 #remove anonymous users
 y
@@ -49,11 +49,11 @@ echo "Cài đặt mariadb hoàn thành"
 
 echo "Tao user"
 
-mysql -uroot -p$1 <<MYSQL_SCRIPT
+mysql -uroot -p${1} <<MYSQL_SCRIPT
 
-create user '$2'@'%' identified by '$3';
+create user '${2}'@'%' identified by '${3}';
 
-GRANT ALL PRIVILEGES ON *.* TO '$2'@'%' IDENTIFIED BY '$3';
+GRANT ALL PRIVILEGES ON *.* TO '${2}'@'%' IDENTIFIED BY '${3}';
 
 FLUSH PRIVILEGES;
 MYSQL_SCRIPT
