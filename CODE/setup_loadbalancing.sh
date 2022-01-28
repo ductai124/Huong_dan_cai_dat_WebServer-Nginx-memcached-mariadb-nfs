@@ -1,9 +1,6 @@
 #! /bin/bash
+source /root/Baitap_tonghop-main/CODE/setup.conf.sh
 
-#Vui lòng nhập địa chỉ ip của 2 máy web server vào dòng phía bên dưới 
-#Ví dụ ip_web_server_1="192.168.1.1"
-ip_web_server_1="192.168.1.21"
-ip_web_server_2="192.168.1.22"
 
 if systemctl is-active --quiet nginx; then
     echo "Nginx Đã được cài đặt, Không đạt yêu cầu..."

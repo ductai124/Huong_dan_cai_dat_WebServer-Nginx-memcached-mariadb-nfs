@@ -1,7 +1,6 @@
 #! /bin/bash
+source /root/Baitap_tonghop-main/CODE/setup.conf.sh
 
-#Nhập ip cho máy chủ nfs server ví dụ ip_server_nfs="192.168.1.23"
-ip_server_nfs="192.168.1.23"
 
 if systemctl is-active --quiet nginx; then
     echo "Nginx Đã được cài đặt, Không đạt yêu cầu..."

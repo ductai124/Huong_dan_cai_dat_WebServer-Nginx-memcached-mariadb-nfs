@@ -1,10 +1,6 @@
 #! /bin/bash
-#Vui lòng nhập dải ip vào dòng phía bên dưới ví dụ ip_range="192.168.1.0"
-#Vui lòng nhập địa chỉ ip của 2 máy web server vào dòng phía bên dưới 
-#Ví dụ ip_web_server_1="192.168.1.1"
-ip_range="192.168.1.0"
-ip_web_server_1="192.168.1.21"
-ip_web_server_2="192.168.1.22"
+source /root/Baitap_tonghop-main/CODE/setup.conf.sh
+
 
 echo "Dải ip của bạn nhập là $ip_range"
 echo "Ip máy web server số 1 là $ip_web_server_1"
