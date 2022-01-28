@@ -1,4 +1,3 @@
-#! /bin/bash
 ip_range="192.168.1.0"
 ip_web_server_1="192.168.1.21"
 ip_web_server_2="192.168.1.22"
@@ -13,4 +12,3 @@ pw_root="tai0837686717"
 remote_user_access="tai123"
 #Mật khẩu của user trên
 user_pw="tai0837686717"
-exit 0
