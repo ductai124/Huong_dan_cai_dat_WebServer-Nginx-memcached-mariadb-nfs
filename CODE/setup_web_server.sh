@@ -13,31 +13,33 @@ telnet_output_memcached="$({ sleep 1; echo $'\e'; } | telnet $ip_server_memcache
 telnet_output_nfs_1="$({ sleep 1; echo $'\e'; } | telnet $ip_server_nfs 2049 2>&1)"
 telnet_output_nfs_2="$({ sleep 1; echo $'\e'; } | telnet $ip_server_nfs 20048 2>&1)"
 
-A="Connected to $server"
+check_maria="Connected to $ip_server_mariadb"
+check_memcached="Connected to $ip_server_memcached"
+check_nfs="Connected to $ip_server_nfs"
 i=0
 
 echo "Kiểm tra cổng dịch vụ mariadb trên server có cho phép máy chủ này kết nối không"
-if [[ "$telnet_output_mariadb" == *"$A"* ]]; then
-  	echo "Dịch vụ mariadb đã được mở cho máy náy trên server có thể tiến hành cài đặt"
+if [[ "$telnet_output_mariadb" == *"$check_maria"* ]]; then
+  	echo "Dịch vụ mariadb đã được mở cho máy này trên server, có thể tiến hành cài đặt"
 	else
-	echo "Kiểm tra server đã add source và mở cổng dịch vụ cho máy chưa do chưa kết nối được dịch vụ mariadb"
+	echo "Kiểm tra server đã add source và mở cổng 3306 cho máy web server này chưa do chưa kết nối được dịch vụ mariadb"
 	i=`expr $i + 1`
 fi
 
 echo "Kiểm tra cổng dịch vụ memcached trên server có cho phép máy chủ này kết nối không"
-if [[ "$telnet_output_memcached" == *"$A"* ]]; then
-  	echo "Dịch vụ memcached đã được mở cho máy náy trên server có thể tiến hành cài đặt"
+if [[ "$telnet_output_memcached" == *"$check_memcached"* ]]; then
+  	echo "Dịch vụ memcached đã được mở cho máy này trên server, có thể tiến hành cài đặt"
 	else
-	echo "Kiểm tra server đã add source và mở cổng dịch vụ cho máy chưa do chưa kết nối được dịch vụ memcached"
+	echo "Kiểm tra server đã add source và mở cổng 11211 cho máy web server này chưa do chưa kết nối được dịch vụ memcached"
 	i=`expr $i + 1`
 fi
 
 echo "Kiểm tra cổng dịch vụ NFS trên server có cho phép máy chủ này kết nối không"
-if [[ "$telnet_output_nfs_1" == *"$A"* ]] && [[ "$telnet_output_nfs_2" == *"$A"* ]]
+if [[ "$telnet_output_nfs_1" == *"$check_nfs"* ]] && [[ "$telnet_output_nfs_2" == *"$check_nfs"* ]]
 	then
-  	echo "Dịch vụ nfs đã được mở cho máy náy trên server có thể tiến hành cài đặt"
+  	echo "Dịch vụ nfs đã được mở cho máy này trên server, có thể tiến hành cài đặt"
 	else
-	echo "Kiểm tra server đã add source và mở cổng dịch vụ cho máy chưa do chưa kết nối được dịch vụ nfs"
+	echo "Kiểm tra server đã add source và mở cổng 2049 và 20048 cho máy web server này chưa do chưa kết nối được dịch vụ nfs"
 	i=`expr $i + 1`
 fi
 

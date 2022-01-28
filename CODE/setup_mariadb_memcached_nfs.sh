@@ -52,15 +52,15 @@ dnf install https://rpms.remirepo.net/enterprise/remi-release-8.rpm -y
 
 echo "Tiến hành cài đặt"
 
-bash setup_mariadb.sh
 bash setup_memcache.sh
 
 echo "Dải ip được cấp cho NFS là là : $ip_range"
 
 bash setup_NFS.sh $ip_range
 
-echo "Thiết lập firewall"
+bash setup_mariadb.sh
 
+echo "Thiết lập firewall"
 bash setup_firewall.sh $ip_web_server_1 $ip_web_server_2
 
 exit 0
