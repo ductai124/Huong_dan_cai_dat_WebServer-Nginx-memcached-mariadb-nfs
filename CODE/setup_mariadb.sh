@@ -19,13 +19,12 @@ systemctl start mariadb
 echo "Vui lòng nhập thiết mật khẩu và các thiết lập của mariadb"
 #mysql_secure_installation
 echo "Mật khẩu của tài khoản root là : $1"
-echo -e "\ny\n"$1"\n"$1"\ny\ny\ny\ny\n" | mysql_secure_installation
 
 mysql_secure_installation <<EOF
 
 y
-"$1"
-"$1"
+$1
+$1
 y
 y
 y
