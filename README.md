@@ -107,12 +107,6 @@ unzip  main.zip
 
 cd Baitap_tonghop-main/CODE/ 
 
-#Sau đó ta ls để xem các file trong thu mực gồm những file gì:
-
-ls
-
-#Truy cập vào file setup_server_all.sh tại ngay những dòng đầu tiên lần lượt nhập dải ip, ip web server 1 và ip web server 2 tương ứng ở trên
-
 #Hãy truy cập vào file config có tên là setup.conf.sh và điền đúng ip dải ip theo máy của mình
 #Như mô hình trên thì file config sẽ được cấu hình như sau
 #Hãy sửa file setup.conf.sh theo như các máy của mình
@@ -142,12 +136,17 @@ user_pw="tai0837686717"
 ## ***Sau đó ta sẽ tiến hành cài đặt bắt đầu từ  có ip 192.168.1.23 (máy chúa 3 dịch vụ mariadb, memcached và NFS server) đầu tiên***
 # Sau đó ta tiến hành cài đặt
 ```php
-#Truy cập vào file sau
-cd Baitap_tonghop-main/CODE/
-#Trong quá trình cài đặt sẽ có bước phải tự thiết lập mật khẩu và 1 số mục trong mariadb hãy để ý
+#Để tải kho code về, ta dùng wget và làm như sau:
+
+wget https://github.com/ductai124/Baitap_tonghop/archive/refs/heads/main.zip
+
+unzip  main.zip
+
+cd Baitap_tonghop-main/CODE/ 
+#Trước khi cài đặt hãy chắc chắn r file setup.conf.sh của các máy được thiết lập các thông số giống nhau
 
 #Phân quyền
-chmod 755 setup_*
+chmod 755 setup*
 
 #Chạy tools cài đặt
 bash setup_mariadb_memcached_nfs.sh
@@ -169,7 +168,7 @@ cd Baitap_tonghop-main/CODE/
 
 #Phân quyền 
 
-chmod 755 setup_*
+chmod 755 setup*
 
 #Chạy tools cài đặt
 bash setup_web_server.sh
@@ -191,7 +190,7 @@ cd Baitap_tonghop-main/CODE/
 
 #Phân quyền cho file
 
-chmod 755 setup_*
+chmod 755 setup*
 
 #Chạy tools cài đặt
 
@@ -212,15 +211,36 @@ unzip  main.zip
 #Sau đó chúng ta tiếp tục cd vào thư mục như sau:
 
 cd Baitap_tonghop-main/CODE/ 
-#Trước khi cài đặt hãy chắc chắn r file setup.conf.sh của các máy được thiết lập các thông số giống nhau
+#Hãy truy cập vào file config có tên là setup.conf.sh và điền đúng ip dải ip theo máy của mình
+#Như mô hình trên thì file config sẽ được cấu hình như sau
+#Hãy sửa file setup.conf.sh theo như các máy của mình
+#LƯU Ý: File config này sẽ được dùng cho tất cả các máy
+vi setup.conf.sh
+
+#! /bin/bash
+ip_range="192.168.1.0"
+ip_web_server_1="192.168.1.21"
+ip_web_server_2="192.168.1.22"
+ip_server_nfs="192.168.1.23"
+ip_server_mariadb="192.168.1.23"
+ip_server_memcached="192.168.1.23"
+
+
+#Mật khẩu cho tài khoản root của mariadb
+pw_root="tai0837686717"
+#Tên user muốn tạo để thiết lập truy cập từ xa
+remote_user_access="tai123"
+#Mật khẩu của user trên
+user_pw="tai0837686717"
 
 ```
+### ***Lưu ý:*** file config trên ở tất cả các máy sẽ phải giống nhau nếu không sẽ dẫn đến việc cài đặt sai
 ## ***Đối với máy cần cài đặt mariadb***
 ```php
 #Phân quyền và cài đặt
 #Trước khi cài đặt hãy chắc chắn r file setup.conf.sh của các máy được thiết lập các thông số giống nhau
 
-chmod 755 setup_*
+chmod 755 setup*
 
 #Cài đặt
 
@@ -231,7 +251,7 @@ bash setup_server_mariadb.sh
 #Phân quyền và cài đặt
 #Trước khi cài đặt hãy chắc chắn r file setup.conf.sh của các máy được thiết lập các thông số giống nhau
 
-chmod 755 setup_*
+chmod 755 setup*
 bash setup_server_memcache.sh
 
 ```
@@ -240,7 +260,7 @@ bash setup_server_memcache.sh
 #Trước khi cài đặt hãy chắc chắn r file setup.conf.sh của các máy được thiết lập các thông số giống nhau
 #Phân quyền và cài đặt
 
-chmod 755 setup_*
+chmod 755 setup*
 bash setup_server_nfs.sh
 
 ```
