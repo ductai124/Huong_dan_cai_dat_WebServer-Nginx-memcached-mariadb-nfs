@@ -107,7 +107,7 @@ unzip  main.zip
 
 cd Baitap_tonghop-main/CODE/ 
 
-#Hãy truy cập vào file config có tên là setup.conf.sh và điền đúng ip dải ip theo máy của mình
+#Hãy truy cập vào file config có tên là setup.conf.sh và điền đúng ip dải ip theo máy của mình, điền mật khẩu của tài khoản root cho mysql, tài khoản và mật khẩu của user cho phép truy cập từ xa
 #Như mô hình trên thì file config sẽ được cấu hình như sau
 #Hãy sửa file setup.conf.sh theo như các máy của mình
 #LƯU Ý: File config này sẽ được dùng cho tất cả các máy
@@ -204,7 +204,7 @@ unzip  main.zip
 #Sau đó chúng ta tiếp tục cd vào thư mục như sau:
 
 cd Baitap_tonghop-main/CODE/ 
-#Hãy truy cập vào file config có tên là setup.conf.sh và điền đúng ip dải ip theo máy của mình
+#Hãy truy cập vào file config có tên là setup.conf.sh và điền đúng ip dải ip theo máy của mình, điền mật khẩu của tài khoản root cho mysql, tài khoản và mật khẩu của user cho phép truy cập từ xa
 #Như mô hình trên thì file config sẽ được cấu hình như sau
 #Hãy sửa file setup.conf.sh theo như các máy của mình
 #LƯU Ý: File config này sẽ được dùng cho tất cả các máy
