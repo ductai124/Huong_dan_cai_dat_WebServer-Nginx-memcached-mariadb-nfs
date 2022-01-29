@@ -87,40 +87,53 @@ vi /etc/nginx/nginx.conf
 
 # 2. Tiến hành cài đặt
 * Đầu tiên sẽ tiến hành cài đặt 4 con máy ảo với IP tương tự như trên
-* Việc đầu tiên ở tất cả các máy chúng ta sẽ tiến hành tắt SELINUX, unzip, telnet, git và reboot lại hệ thống
+* Việc đầu tiên ở tất cả các máy chúng ta sẽ tiến hành tắt SELINUX, telnet,  wget + unzip (để tải kho code về máy) và reboot lại hệ thống
 ```php
 sed -i 's/\(^SELINUX=\).*/\SELINUX=disabled/' /etc/sysconfig/selinux
 sed -i 's/\(^SELINUX=\).*/\SELINUX=disabled/' /etc/selinux/config
-yum -y install telnet git
+yum -y install telnet wget unzip
 
 reboot
 ```
 ## ***Tải kho code và cấu hình trước khi tiến hành cài đặt***
 ```php
-#Ta hãy sử dụng những file sau trên kho code, tải code từ kho code,  chúng ta dùng git để sử dụng và tiến hành cài đặt như sau 
+#Để tải kho code về, ta dùng wget và làm như sau:
 
- git clone https://github.com/ductai124/Baitap_tonghop.git
+wget https://github.com/ductai124/Baitap_tonghop/archive/refs/heads/main.zip
+
+unzip  main.zip
 
 #Sau đó chúng ta tiếp tục cd vào thư mục như sau:
 
-cd Baitap_tonghop-main/CODE/
+cd Baitap_tonghop-main/CODE/ 
 
-#Sau đó ta ls để xem các file trong thu mực gồm những file gì
+#Sau đó ta ls để xem các file trong thu mực gồm những file gì:
+
 ls
 
 #Truy cập vào file setup_server_all.sh tại ngay những dòng đầu tiên lần lượt nhập dải ip, ip web server 1 và ip web server 2 tương ứng ở trên
 
-#Hãy truy cập vào file config và điền đúng ip dải ip theo máy của mình
+#Hãy truy cập vào file config có tên là setup.conf.sh và điền đúng ip dải ip theo máy của mình
 #Như mô hình trên thì file config sẽ được cấu hình như sau
-
+#Hãy sửa file setup.conf.sh theo như các máy của mình
+#LƯU Ý: File config này sẽ được dùng cho tất cả các máy
 vi setup.conf.sh
 
+#! /bin/bash
 ip_range="192.168.1.0"
 ip_web_server_1="192.168.1.21"
 ip_web_server_2="192.168.1.22"
 ip_server_nfs="192.168.1.23"
 ip_server_mariadb="192.168.1.23"
 ip_server_memcached="192.168.1.23"
+
+
+#Mật khẩu cho tài khoản root của mariadb
+pw_root="tai0837686717"
+#Tên user muốn tạo để thiết lập truy cập từ xa
+remote_user_access="tai123"
+#Mật khẩu của user trên
+user_pw="tai0837686717"
 
 
 ```
@@ -139,35 +152,20 @@ chmod 755 setup_*
 #Chạy tools cài đặt
 bash setup_mariadb_memcached_nfs.sh
 
-
-#Trên máy chủ
-#Truy cập vào mysql
-mysql -u root -p
-#Tạo tài khoản mới để truy cập từ xa (ip ở đây là ip của máy web server)
-create user 'tai123'@'%' identified by 'tai0837686717';
-
-GRANT ALL PRIVILEGES ON *.* TO 'tai123'@'192.168.1.21' IDENTIFIED BY 'tai0837686717';
-
-GRANT ALL PRIVILEGES ON *.* TO 'tai123'@'192.168.1.22' IDENTIFIED BY 'tai0837686717';
-
-FLUSH PRIVILEGES;
-#Hoặc sử dụng tài khoản root để truy cập từ xa (ip ở đây là ip của máy web server)
-
-GRANT ALL PRIVILEGES ON *.* TO 'root'@'192.168.1.21' IDENTIFIED BY 'tai0837686717' WITH GRANT OPTION;
-
-GRANT ALL PRIVILEGES ON *.* TO 'root'@'192.168.1.22' IDENTIFIED BY 'tai0837686717' WITH GRANT OPTION;
-
-FLUSH PRIVILEGES;
-
 ```
 ## ***Tiếp theo sẽ tiến hành cài đặt máy web server (IP:192.168.1.21 và IP: 192.168.1.22)***
 ```php
-#Ta hãy sử dụng những file sau trên kho code, tải code từ kho code và chúng ta dùng git để sử dụng và tiến hành cài đặt như sau 
+#Để tải kho code về, ta dùng wget và làm như sau:
 
- git clone https://github.com/ductai124/Baitap_tonghop.git
+wget https://github.com/ductai124/Baitap_tonghop/archive/refs/heads/main.zip
+
+unzip  main.zip
 
 #Sau đó chúng ta tiếp tục cd vào thư mục như sau:
-cd Baitap_tonghop-main/CODE/
+
+cd Baitap_tonghop-main/CODE/ 
+
+#Trước khi cài đặt hãy chắc chắn r file setup.conf.sh của các máy được thiết lập các thông số giống nhau
 
 #Phân quyền 
 
@@ -179,13 +177,17 @@ bash setup_web_server.sh
 ```
 ## ***Cuối cùng là thiết lập cân bằng tải tại máy có ip là 192.168.1.20***
 ```php
-#Ta hãy sử dụng những file sau trên kho code, tải code từ kho code và chúng ta dùng git để sử dụng và tiến hành cài đặt như sau 
+#Để tải kho code về, ta dùng wget và làm như sau:
 
- git clone https://github.com/ductai124/Baitap_tonghop.git
+wget https://github.com/ductai124/Baitap_tonghop/archive/refs/heads/main.zip
+
+unzip  main.zip
 
 #Sau đó chúng ta tiếp tục cd vào thư mục như sau:
 
-cd Baitap_tonghop-main/CODE/
+cd Baitap_tonghop-main/CODE/ 
+
+#Trước khi cài đặt hãy chắc chắn r file setup.conf.sh của các máy được thiết lập các thông số giống nhau
 
 #Phân quyền cho file
 
@@ -198,19 +200,25 @@ bash setup_loadbalancing.sh
 ```
 
 # 3.	Trường hợp các máy chủ memcached, mariadb, nfs cài đặt riêng lẻ
-## ***Đầu tiên chung ta tải code từ kho code về***
+## ***Đầu tiên chúng ta tải code từ kho code về***
 ```php
-##Ta hãy sử dụng những file sau trên kho code, tải code từ kho code và chúng ta dùng git để sử dụng và tiến hành cài đặt như sau 
+#Để tải kho code về, ta dùng wget và làm như sau:
 
- git clone https://github.com/ductai124/Baitap_tonghop.git
+wget https://github.com/ductai124/Baitap_tonghop/archive/refs/heads/main.zip
+
+unzip  main.zip
+
 
 #Sau đó chúng ta tiếp tục cd vào thư mục như sau:
 
-cd Baitap_tonghop-main/CODE/
+cd Baitap_tonghop-main/CODE/ 
+#Trước khi cài đặt hãy chắc chắn r file setup.conf.sh của các máy được thiết lập các thông số giống nhau
+
 ```
 ## ***Đối với máy cần cài đặt mariadb***
 ```php
 #Phân quyền và cài đặt
+#Trước khi cài đặt hãy chắc chắn r file setup.conf.sh của các máy được thiết lập các thông số giống nhau
 
 chmod 755 setup_*
 
@@ -221,6 +229,7 @@ bash setup_server_mariadb.sh
 ## ***Đối với máy cần cài đặt memcached server***
 ```php
 #Phân quyền và cài đặt
+#Trước khi cài đặt hãy chắc chắn r file setup.conf.sh của các máy được thiết lập các thông số giống nhau
 
 chmod 755 setup_*
 bash setup_server_memcache.sh
@@ -228,6 +237,7 @@ bash setup_server_memcache.sh
 ```
 ## ***Đối với máy cần cài đặt nfs server***
 ```php
+#Trước khi cài đặt hãy chắc chắn r file setup.conf.sh của các máy được thiết lập các thông số giống nhau
 #Phân quyền và cài đặt
 
 chmod 755 setup_*
