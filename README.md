@@ -95,7 +95,7 @@ yum -y install telnet wget unzip
 
 reboot
 ```
-## ***Tải kho code và cấu hình trước khi tiến hành cài đặt***
+## ***Tải kho code và cấu hình trước khi tiến hành thiết lập các thông số trên toàn bộ các máy***
 ```php
 #Để tải kho code về, ta dùng wget và làm như sau:
 
@@ -131,17 +131,13 @@ user_pw="tai0837686717"
 
 
 ```
-### ***Lưu ý:*** file config trên ở tất cả các máy sẽ phải giống nhau nếu không sẽ dẫn đến việc cài đặt sai
+* ### ***Lưu ý:*** file config trên ở tất cả các máy sẽ phải giống nhau nếu không sẽ dẫn đến việc cài đặt sai
+* Sau khi đã thiết lập xong các thông số thì sẽ đến bước tiếp theo
 
 ## ***Sau đó ta sẽ tiến hành cài đặt bắt đầu từ  có ip 192.168.1.23 (máy chúa 3 dịch vụ mariadb, memcached và NFS server) đầu tiên***
 # Sau đó ta tiến hành cài đặt
 ```php
-#Để tải kho code về, ta dùng wget và làm như sau:
-
-wget https://github.com/ductai124/Baitap_tonghop/archive/refs/heads/main.zip
-
-unzip  main.zip
-
+#Truy cập vào thư mục sau
 cd Baitap_tonghop-main/CODE/ 
 #Trước khi cài đặt hãy chắc chắn r file setup.conf.sh của các máy được thiết lập các thông số giống nhau
 
@@ -154,14 +150,7 @@ bash setup_mariadb_memcached_nfs.sh
 ```
 ## ***Tiếp theo sẽ tiến hành cài đặt máy web server (IP:192.168.1.21 và IP: 192.168.1.22)***
 ```php
-#Để tải kho code về, ta dùng wget và làm như sau:
-
-wget https://github.com/ductai124/Baitap_tonghop/archive/refs/heads/main.zip
-
-unzip  main.zip
-
-#Sau đó chúng ta tiếp tục cd vào thư mục như sau:
-
+#Truy cập vào thư mục sau
 cd Baitap_tonghop-main/CODE/ 
 
 #Trước khi cài đặt hãy chắc chắn r file setup.conf.sh của các máy được thiết lập các thông số giống nhau
@@ -176,13 +165,7 @@ bash setup_web_server.sh
 ```
 ## ***Cuối cùng là thiết lập cân bằng tải tại máy có ip là 192.168.1.20***
 ```php
-#Để tải kho code về, ta dùng wget và làm như sau:
-
-wget https://github.com/ductai124/Baitap_tonghop/archive/refs/heads/main.zip
-
-unzip  main.zip
-
-#Sau đó chúng ta tiếp tục cd vào thư mục như sau:
+#Truy cập vào thư mục sau
 
 cd Baitap_tonghop-main/CODE/ 
 
@@ -200,6 +183,16 @@ bash setup_loadbalancing.sh
 
 # 3.	Trường hợp các máy chủ memcached, mariadb, nfs cài đặt riêng lẻ
 ## ***Đầu tiên chúng ta tải code từ kho code về***
+* Đầu tiên sẽ tiến hành cài đặt 4 con máy ảo với IP tương tự như trên
+* Việc đầu tiên ở tất cả các máy chúng ta sẽ tiến hành tắt SELINUX, telnet,  wget + unzip (để tải kho code về máy) và reboot lại hệ thống
+```php
+sed -i 's/\(^SELINUX=\).*/\SELINUX=disabled/' /etc/sysconfig/selinux
+sed -i 's/\(^SELINUX=\).*/\SELINUX=disabled/' /etc/selinux/config
+yum -y install telnet wget unzip
+
+reboot
+```
+## ***Tải kho code và cấu hình trước khi tiến hành thiết lập các thông số trên toàn bộ các máy***
 ```php
 #Để tải kho code về, ta dùng wget và làm như sau:
 
@@ -234,9 +227,13 @@ remote_user_access="tai123"
 user_pw="tai0837686717"
 
 ```
-### ***Lưu ý:*** file config trên ở tất cả các máy sẽ phải giống nhau nếu không sẽ dẫn đến việc cài đặt sai
+* ### ***Lưu ý:*** file config trên ở tất cả các máy sẽ phải giống nhau nếu không sẽ dẫn đến việc cài đặt sai
+* Sau khi đã thiết lập xong các thông số thì sẽ đến bước tiếp theo
 ## ***Đối với máy cần cài đặt mariadb***
 ```php
+#Truy cập vào thư mục sau
+
+cd Baitap_tonghop-main/CODE/ 
 #Phân quyền và cài đặt
 #Trước khi cài đặt hãy chắc chắn r file setup.conf.sh của các máy được thiết lập các thông số giống nhau
 
@@ -248,6 +245,9 @@ bash setup_server_mariadb.sh
 ```
 ## ***Đối với máy cần cài đặt memcached server***
 ```php
+#Truy cập vào thư mục sau
+
+cd Baitap_tonghop-main/CODE/ 
 #Phân quyền và cài đặt
 #Trước khi cài đặt hãy chắc chắn r file setup.conf.sh của các máy được thiết lập các thông số giống nhau
 
@@ -257,6 +257,9 @@ bash setup_server_memcache.sh
 ```
 ## ***Đối với máy cần cài đặt nfs server***
 ```php
+#Truy cập vào thư mục sau
+
+cd Baitap_tonghop-main/CODE/ 
 #Trước khi cài đặt hãy chắc chắn r file setup.conf.sh của các máy được thiết lập các thông số giống nhau
 #Phân quyền và cài đặt
 
