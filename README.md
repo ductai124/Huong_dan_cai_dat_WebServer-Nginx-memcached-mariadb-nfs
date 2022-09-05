@@ -54,7 +54,7 @@ vi /etc/nginx/nginx.conf
  
 -->
 
-# TÀI LIỆU HƯỚNG DẪN CÀI ĐĂT 1 MÔ HÌNH HỆ THỐNG CƠ BẢN 
+# TÀI LIỆU HƯỚNG DẪN CÀI ĐĂT 1 MÔ HÌNH HỆ THỐNG WEB SERVER CƠ BẢN 
 ## Người viết : Phạm Đức Tài
 ## SDT : 0837686717
 ## Mail : phamductai123456@gmail.com
